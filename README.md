@@ -1,2 +1,2 @@
-# woocommerce-api-openapi-specification-
-The WooCommerce REST API specification in OpenAPI format
+# WooCommerce REST API specification in OpenAPI 3.0 format
+The WooCommerce REST API specification in OpenAPI 3.0 format
