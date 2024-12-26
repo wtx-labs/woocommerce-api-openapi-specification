@@ -22,9 +22,7 @@ paths:
       parameters:
       - name: role
         in: query
-        description: "Limit result set to resources with a specific role. Options:\
-          \ all, administrator, editor, author, contributor, subscriber, customer\
-          \ and shop_manager. Default is customer."
+        description: "Limit result set to resources with a specific role. Options: all, administrator, editor, author, contributor, subscriber, customer and shop_manager. Default is customer."
         schema:
           type: string
       - name: per_page
@@ -39,7 +37,7 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
+        '200':
           description: Returns list of customers.
           content:
             application/json:
@@ -47,13 +45,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Customer'
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -73,19 +71,19 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
+        '200':
           description: Returns specified customer.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -139,8 +137,7 @@ paths:
           type: string
       - name: status
         in: query
-        description: "Limit result set to products assigned a specific status. Options:\
-          \ any, draft, pending, private and publish. Default is any."
+        description: "Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any."
         style: form
         explode: true
         schema:
@@ -156,8 +153,7 @@ paths:
             - publish
       - name: stock_status
         in: query
-        description: "Limit result set to products with specified stock status. Options:\
-          \ instock, outofstock and onbackorder."
+        description: "Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder."
         schema:
           type: string
           enum:
@@ -166,8 +162,7 @@ paths:
           - onbackorder
       - name: order
         in: query
-        description: "Order sort attribute ascending or descending. Options: asc and\
-          \ desc. Default is desc."
+        description: "Order sort attribute ascending or descending. Options: asc and desc. Default is desc."
         schema:
           type: string
           default: desc
@@ -175,7 +170,7 @@ paths:
           - asc
           - desc
       responses:
-        "200":
+        '200':
           description: Returns list of products.
           content:
             application/json:
@@ -183,13 +178,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -209,19 +204,19 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
+        '200':
           description: Returns specified product.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -247,19 +242,19 @@ paths:
               $ref: '#/components/schemas/Product'
         required: true
       responses:
-        "200":
+        '200':
           description: Returns updated product.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -304,9 +299,7 @@ paths:
           type: string
       - name: status
         in: query
-        description: "Limit result set to orders assigned a specific status. Options:\
-          \ any, pending, processing, on-hold, completed, cancelled, refunded, failed\
-          \ and trash. Default is any."
+        description: "Limit result set to orders assigned a specific status. Options: any, pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is any."
         style: form
         explode: true
         schema:
@@ -326,8 +319,7 @@ paths:
             - trash
       - name: order
         in: query
-        description: "Order sort attribute ascending or descending. Options: asc and\
-          \ desc. Default is desc."
+        description: "Order sort attribute ascending or descending. Options: asc and desc. Default is desc."
         schema:
           type: string
           default: desc
@@ -335,7 +327,7 @@ paths:
           - asc
           - desc
       responses:
-        "200":
+        '200':
           description: Returns list of orders.
           content:
             application/json:
@@ -343,13 +335,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -369,19 +361,19 @@ paths:
         schema:
           type: integer
       responses:
-        "200":
+        '200':
           description: Returns specified order.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        "404":
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -394,7 +386,7 @@ paths:
       summary: This API lets you retrieve and view orders totals report.
       operationId: reportOrderTotalsSummary
       responses:
-        "200":
+        '200':
           description: Returns list of products.
           content:
             application/json:
@@ -402,7 +394,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ReportOrderTotalSummary'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -417,8 +409,7 @@ paths:
       parameters:
       - name: period
         in: query
-        description: "Report period. Default is today's date. Options: week, month,\
-          \ last_month and year"
+        description: "Report period. Default is today's date. Options: week, month, last_month and year"
         schema:
           type: string
           enum:
@@ -428,18 +419,16 @@ paths:
           - year
       - name: date_min
         in: query
-        description: "Return sales for a specific start date, the date need to be\
-          \ in the YYYY-MM-DD format."
+        description: "Return sales for a specific start date, the date need to be in the YYYY-MM-DD format."
         schema:
           type: string
       - name: date_max
         in: query
-        description: "Return sales for a specific end date, the date need to be in\
-          \ the YYYY-MM-DD format."
+        description: "Return sales for a specific end date, the date need to be in the YYYY-MM-DD format."
         schema:
           type: string
       responses:
-        "200":
+        '200':
           description: Returns list of products.
           content:
             application/json:
@@ -447,13 +436,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ReportSalesSummary'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -506,12 +495,10 @@ components:
           description: Unique identifier.
         type:
           type: string
-          description: "Product type. Options: simple, grouped, external and variable.\
-            \ Default is simple."
+          description: "Product type. Options: simple, grouped, external and variable. Default is simple."
         status:
           type: string
-          description: "Product status (post status). Options: draft, pending, private\
-            \ and publish. Default is publish."
+          description: "Product status (post status). Options: draft, pending, private and publish. Default is publish."
         description:
           type: string
           description: Product description.
@@ -526,8 +513,7 @@ components:
           description: Stock quantity.
         stock_status:
           type: string
-          description: "Controls the stock status of the product. Options: instock,\
-            \ outofstock, onbackorder. Default is instock."
+          description: "Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock."
         parent_id:
           type: integer
           description: Product parent ID.
@@ -570,8 +556,7 @@ components:
           description: Order number.
         status:
           type: string
-          description: "Order status. Options: pending, processing, on-hold, completed,\
-            \ cancelled, refunded, failed and trash. Default is pending."
+          description: "Order status. Options: pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is pending."
         date_created:
           type: string
           description: "The date the order was created, in the site's timezone."
@@ -816,4 +801,3 @@ components:
     basicAuth:
       type: http
       scheme: basic
-x-original-swagger-version: "2.0"
