@@ -4,38 +4,120 @@ info:
   description: The REST API is a powerful part of WooCommerce which lets you read and write various parts of WooCommerce data such as orders, products, coupons, customers, and shipping zones.
   version: v3
 servers:
-- url: https://example-woocommerce-shop.com/wp-json/wc/v3
+  - url: https://example-woocommerce-shop.com/wp-json/wc/v3
 security:
-- basicAuth: []
+  - basicAuth: []
 tags:
-- name: Customers
-- name: Products
-- name: Orders
-- name: Reports
+  - name: Customers
+  - name: Products
+  - name: Orders
+  - name: Reports
 paths:
   /customers:
     get:
       tags:
-      - Customers
+        - Customers
       summary: This API helps you to view all the customers.
       operationId: listAllCustomers
       parameters:
-      - name: role
-        in: query
-        description: "Limit result set to resources with a specific role. Options: all, administrator, editor, author, contributor, subscriber, customer and shop_manager. Default is customer."
-        schema:
-          type: string
-      - name: per_page
-        in: query
-        description: Maximum number of items to be returned in result set. Default
-          is 10.
-        schema:
-          type: integer
-      - name: page
-        in: query
-        description: Current page of the collection. Default is 1.
-        schema:
-          type: integer
+        - name: context
+          in: query
+          description: Scope under which the request is made; determines fields present in response.
+          required: false
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+        - name: page
+          in: query
+          description: Current page of the collection.
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set.
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          required: false
+          schema:
+            type: string
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific IDs.
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: after
+          in: query
+          description: Limit response to resources created after a given ISO8601 compliant date.
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: before
+          in: query
+          description: Limit response to resources created before a given ISO8601 compliant date.
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          required: false
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending (asc as default).
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        - name: orderby
+          in: query
+          description: Sort collection by object attribute.
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - include
+              - name
+              - registered_date
+              - email
+        - name: email
+          in: query
+          description: Limit result set to resources with a specific email address.
+          required: false
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: Limit result set to resources with a specific role.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Returns list of customers.
@@ -45,14 +127,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Customer'
-        '404':
-          description: Not Found
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        '401':
-          description: Unauthorized
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -60,16 +142,16 @@ paths:
   /customers/{customerId}:
     get:
       tags:
-      - Customers
+        - Customers
       summary: This API lets you retrieve and view a specific customer by ID.
       operationId: retrieveCustomerById
       parameters:
-      - name: customerId
-        in: path
-        description: ID of customer to return
-        required: true
-        schema:
-          type: integer
+        - name: customerId
+          in: path
+          description: ID of customer to return
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Returns specified customer.
@@ -77,14 +159,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
-        '404':
-          description: Not Found
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        '401':
-          description: Unauthorized
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -92,83 +174,79 @@ paths:
   /products:
     get:
       tags:
-      - Products
+        - Products
       summary: This API helps you to view all the products.
       operationId: listAllProducts
       parameters:
-      - name: sku
-        in: query
-        description: Limit result set to products with a specific SKU.
-        schema:
-          type: string
-      - name: attribute
-        in: query
-        description: Limit result set to products with a specific attribute.
-        schema:
-          type: string
-      - name: per_page
-        in: query
-        description: Maximum number of items to be returned in result set. Default
-          is 10.
-        schema:
-          type: integer
-      - name: page
-        in: query
-        description: Current page of the collection. Default is 1.
-        schema:
-          type: integer
-      - name: after
-        in: query
-        description: Limit response to resources published after a given ISO8601 compliant
-          date (eg. 2023-05-07T10:00:00).
-        schema:
-          type: string
-      - name: before
-        in: query
-        description: Limit response to resources published before a given ISO8601
-          compliant date (eg. 2023-10-07T12:10:16).
-        schema:
-          type: string
-      - name: modified_after
-        in: query
-        description: Limit response to resources modified after a given ISO8601 compliant
-          date. (eg. 2023-05-07T10:00:00).
-        schema:
-          type: string
-      - name: status
-        in: query
-        description: "Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any."
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
+        - name: sku
+          in: query
+          description: Limit result set to products with a specific SKU.
+          schema:
             type: string
-            default: any
+        - name: attribute
+          in: query
+          description: Limit result set to products with a specific attribute.
+          schema:
+            type: string
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Current page of the collection. Default is 1.
+          schema:
+            type: integer
+        - name: after
+          in: query
+          description: Limit response to resources published after a given ISO8601 compliant date (eg. 2023-05-07T10:00:00).
+          schema:
+            type: string
+        - name: before
+          in: query
+          description: Limit response to resources published before a given ISO8601 compliant date (eg. 2023-10-07T12:10:16).
+          schema:
+            type: string
+        - name: modified_after
+          in: query
+          description: Limit response to resources modified after a given ISO8601 compliant date. (eg. 2023-05-07T10:00:00).
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 'Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.'
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              default: any
+              enum:
+                - any
+                - draft
+                - pending
+                - private
+                - publish
+        - name: stock_status
+          in: query
+          description: 'Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.'
+          schema:
+            type: string
             enum:
-            - any
-            - draft
-            - pending
-            - private
-            - publish
-      - name: stock_status
-        in: query
-        description: "Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder."
-        schema:
-          type: string
-          enum:
-          - instock
-          - outofstock
-          - onbackorder
-      - name: order
-        in: query
-        description: "Order sort attribute ascending or descending. Options: asc and desc. Default is desc."
-        schema:
-          type: string
-          default: desc
-          enum:
-          - asc
-          - desc
+              - instock
+              - outofstock
+              - onbackorder
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            default: desc
+            enum:
+              - asc
+              - desc
       responses:
         '200':
           description: Returns list of products.
@@ -193,16 +271,16 @@ paths:
   /products/{productId}:
     get:
       tags:
-      - Products
+        - Products
       summary: This API lets you retrieve and view a specific product by ID.
       operationId: retrieveProductById
       parameters:
-      - name: productId
-        in: path
-        description: ID of product to return
-        required: true
-        schema:
-          type: integer
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Returns specified product.
@@ -210,30 +288,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
     put:
       tags:
-      - Products
+        - Products
       summary: This API lets you make changes to a product.
       operationId: updateProductById
       parameters:
-      - name: productId
-        in: path
-        description: ID of product to update
-        required: true
-        schema:
-          type: integer
+        - name: productId
+          in: path
+          description: ID of product to update
+          required: true
+          schema:
+            type: integer
       requestBody:
         description: Product object with data to update.
         content:
@@ -248,14 +326,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        '404':
-          description: Not Found
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        '401':
-          description: Unauthorized
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -264,68 +342,64 @@ paths:
   /orders:
     get:
       tags:
-      - Orders
+        - Orders
       summary: This API helps you to view all the orders.
       operationId: listAllOrders
       parameters:
-      - name: page
-        in: query
-        description: Current page of the collection. Default is 1.
-        schema:
-          type: integer
-      - name: per_page
-        in: query
-        description: Maximum number of items to be returned in result set. Default
-          is 10.
-        schema:
-          type: integer
-      - name: after
-        in: query
-        description: Limit response to resources published after a given ISO8601 compliant
-          date (eg. 2023-05-07T10:00:00).
-        schema:
-          type: string
-      - name: before
-        in: query
-        description: Limit response to resources published before a given ISO8601
-          compliant date (eg. 2023-10-07T12:10:16).
-        schema:
-          type: string
-      - name: modified_after
-        in: query
-        description: Limit response to resources modified after a given ISO8601 compliant
-          date. (eg. 2023-05-07T10:00:00).
-        schema:
-          type: string
-      - name: status
-        in: query
-        description: "Limit result set to orders assigned a specific status. Options: any, pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is any."
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
+        - name: page
+          in: query
+          description: Current page of the collection. Default is 1.
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+        - name: after
+          in: query
+          description: Limit response to resources published after a given ISO8601 compliant date (eg. 2023-05-07T10:00:00).
+          schema:
             type: string
-            default: any
+        - name: before
+          in: query
+          description: Limit response to resources published before a given ISO8601 compliant date (eg. 2023-10-07T12:10:16).
+          schema:
+            type: string
+        - name: modified_after
+          in: query
+          description: Limit response to resources modified after a given ISO8601 compliant date. (eg. 2023-05-07T10:00:00).
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 'Limit result set to orders assigned a specific status. Options: any, pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is any.'
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              default: any
+              enum:
+                - any
+                - pending
+                - processing
+                - on-hold
+                - completed
+                - cancelled
+                - refunded
+                - failed
+                - trash
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            default: desc
             enum:
-            - any
-            - pending
-            - processing
-            - on-hold
-            - completed
-            - cancelled
-            - refunded
-            - failed
-            - trash
-      - name: order
-        in: query
-        description: "Order sort attribute ascending or descending. Options: asc and desc. Default is desc."
-        schema:
-          type: string
-          default: desc
-          enum:
-          - asc
-          - desc
+              - asc
+              - desc
       responses:
         '200':
           description: Returns list of orders.
@@ -350,16 +424,16 @@ paths:
   /orders/{orderId}:
     get:
       tags:
-      - Orders
+        - Orders
       summary: This API lets you retrieve and view a specific order.
       operationId: retrieveOrderById
       parameters:
-      - name: orderId
-        in: path
-        description: ID of order to return
-        required: true
-        schema:
-          type: integer
+        - name: orderId
+          in: path
+          description: ID of order to return
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Returns specified order.
@@ -367,14 +441,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        '404':
-          description: Not Found
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-        '401':
-          description: Unauthorized
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -382,7 +456,7 @@ paths:
   /reports/orders/totals:
     get:
       tags:
-      - Reports
+        - Reports
       summary: This API lets you retrieve and view orders totals report.
       operationId: reportOrderTotalsSummary
       responses:
@@ -403,30 +477,30 @@ paths:
   /reports/sales:
     get:
       tags:
-      - Reports
+        - Reports
       summary: This API lets you retrieve and view a sales report.
       operationId: reportSalesSummary
       parameters:
-      - name: period
-        in: query
-        description: "Report period. Default is today's date. Options: week, month, last_month and year"
-        schema:
-          type: string
-          enum:
-          - week
-          - month
-          - last_month
-          - year
-      - name: date_min
-        in: query
-        description: "Return sales for a specific start date, the date need to be in the YYYY-MM-DD format."
-        schema:
-          type: string
-      - name: date_max
-        in: query
-        description: "Return sales for a specific end date, the date need to be in the YYYY-MM-DD format."
-        schema:
-          type: string
+        - name: period
+          in: query
+          description: 'Report period. Default is today''s date. Options: week, month, last_month and year'
+          schema:
+            type: string
+            enum:
+              - week
+              - month
+              - last_month
+              - year
+        - name: date_min
+          in: query
+          description: Return sales for a specific start date, the date need to be in the YYYY-MM-DD format.
+          schema:
+            type: string
+        - name: date_max
+          in: query
+          description: Return sales for a specific end date, the date need to be in the YYYY-MM-DD format.
+          schema:
+            type: string
       responses:
         '200':
           description: Returns list of products.
@@ -455,24 +529,56 @@ components:
       properties:
         id:
           type: integer
-          description: Unique identifier for the resource.
+          description: Unique identifier for the resource. read-only
+        date_created:
+          type: string
+          format: date-time
+          description: The date the customer was created, in the site's timezone. read-only
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the customer was created, as GMT. read-only
+        date_modified:
+          type: string
+          format: date-time
+          description: The date the customer was last modified, in the site's timezone. read-only
+        date_modified_gmt:
+          type: string
+          format: date-time
+          description: The date the customer was last modified, as GMT. read-only
         email:
           type: string
-          description: The email address for the customer.
+          description: The email address for the customer. mandatory
         first_name:
           type: string
           description: Customer first name.
         last_name:
           type: string
           description: Customer last name.
+        role:
+          type: string
+          description: Customer role. read-only
         username:
           type: string
           description: Customer login name.
+        password:
+          type: string
+          description: Customer password. write-only
+        billing:
+          $ref: '#/components/schemas/Billing'
+        shipping:
+          $ref: '#/components/schemas/Shipping'
+        is_paying_customer:
+          type: boolean
+          description: Is the customer a paying customer? read-only
+        avatar_url:
+          type: string
+          description: Avatar URL. read-only
         meta_data:
           type: array
-          description: Meta data properties.
+          description: Meta data.
           items:
-            $ref: '#/components/schemas/CustomerMetaData'
+            $ref: '#/components/schemas/MetaData'
     Product:
       type: object
       properties:
@@ -481,11 +587,11 @@ components:
           description: Unique identifier for the resource.
         date_created:
           type: string
-          description: "The date the product was created, in the site's timezone."
+          description: The date the product was created, in the site's timezone.
           format: date-time
         date_modified:
           type: string
-          description: "The date the product was last modified, in the site's timezone."
+          description: The date the product was last modified, in the site's timezone.
           format: date-time
         name:
           type: string
@@ -495,10 +601,10 @@ components:
           description: Unique identifier.
         type:
           type: string
-          description: "Product type. Options: simple, grouped, external and variable. Default is simple."
+          description: 'Product type. Options: simple, grouped, external and variable. Default is simple.'
         status:
           type: string
-          description: "Product status (post status). Options: draft, pending, private and publish. Default is publish."
+          description: 'Product status (post status). Options: draft, pending, private and publish. Default is publish.'
         description:
           type: string
           description: Product description.
@@ -513,7 +619,7 @@ components:
           description: Stock quantity.
         stock_status:
           type: string
-          description: "Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock."
+          description: 'Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.'
         parent_id:
           type: integer
           description: Product parent ID.
@@ -543,8 +649,7 @@ components:
           description: Attribute name.
         option:
           type: string
-          description: Selected attribute term name. Applicable only for Product represents
-            SKU (variation)
+          description: Selected attribute term name. Applicable only for Product represents SKU (variation)
     Order:
       type: object
       properties:
@@ -556,22 +661,22 @@ components:
           description: Order number.
         status:
           type: string
-          description: "Order status. Options: pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is pending."
+          description: 'Order status. Options: pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is pending.'
         date_created:
           type: string
-          description: "The date the order was created, in the site's timezone."
+          description: The date the order was created, in the site's timezone.
           format: date-time
         date_modified:
           type: string
-          description: "The date the order was last modified, in the site's timezone."
+          description: The date the order was last modified, in the site's timezone.
           format: date-time
         date_paid:
           type: string
-          description: "The date the order was paid, in the site's timezone."
+          description: The date the order was paid, in the site's timezone.
           format: date-time
         date_completed:
           type: string
-          description: "The date the order was completed, in the site's timezone."
+          description: The date the order was completed, in the site's timezone.
           format: date-time
         total:
           type: string
@@ -589,15 +694,15 @@ components:
           type: string
           description: Note left by customer during checkout.
         billing:
-          $ref: '#/components/schemas/OrderBilling'
+          $ref: '#/components/schemas/Billing'
         shipping:
-          $ref: '#/components/schemas/OrderShipping'
+          $ref: '#/components/schemas/Shipping'
         line_items:
           type: array
           description: Line items data.
           items:
             $ref: '#/components/schemas/OrderLineItem'
-    OrderBilling:
+    Billing:
       type: object
       properties:
         first_name:
@@ -611,16 +716,16 @@ components:
           description: Company name.
         address_1:
           type: string
-          description: Address line 1.
+          description: Address line 1
         address_2:
           type: string
-          description: Address line 2.
+          description: Address line 2
         city:
           type: string
           description: City name.
         state:
           type: string
-          description: "ISO code or name of the state, province or district."
+          description: ISO code or name of the state, province or district.
         postcode:
           type: string
           description: Postal code.
@@ -633,7 +738,7 @@ components:
         phone:
           type: string
           description: Phone number.
-    OrderShipping:
+    Shipping:
       type: object
       properties:
         first_name:
@@ -647,25 +752,22 @@ components:
           description: Company name.
         address_1:
           type: string
-          description: Address line 1.
+          description: Address line 1
         address_2:
           type: string
-          description: Address line 2.
+          description: Address line 2
         city:
           type: string
           description: City name.
         state:
           type: string
-          description: "ISO code or name of the state, province or district."
+          description: ISO code or name of the state, province or district.
         postcode:
           type: string
           description: Postal code.
         country:
           type: string
-          description: Country code in ISO 3166-1 alpha-2 format.
-        phone:
-          type: string
-          description: Phone number.
+          description: ISO code of the country.
     OrderLineItem:
       type: object
       properties:
@@ -688,7 +790,7 @@ components:
           description: Product SKU.
         variation_id:
           type: integer
-          description: "Variation ID, if applicable."
+          description: Variation ID, if applicable.
         quantity:
           type: integer
           description: Quantity ordered.
@@ -703,18 +805,6 @@ components:
           type: string
           description: Parent product name.
     MetaData:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Meta ID.
-        key:
-          type: string
-          description: Meta key.
-        value:
-          type: string
-          description: Meta value.
-    CustomerMetaData:
       type: object
       properties:
         id:
