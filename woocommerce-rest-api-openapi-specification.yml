@@ -65,20 +65,6 @@ paths:
             type: array
             items:
               type: integer
-        - name: after
-          in: query
-          description: Limit response to resources created after a given ISO8601 compliant date.
-          required: false
-          schema:
-            type: string
-            format: date-time
-        - name: before
-          in: query
-          description: Limit response to resources created before a given ISO8601 compliant date.
-          required: false
-          schema:
-            type: string
-            format: date-time
         - name: offset
           in: query
           description: Offset the result set by a specific number of items.
@@ -114,10 +100,19 @@ paths:
             type: string
         - name: role
           in: query
-          description: Limit result set to resources with a specific role.
+          description: Limit result set to resources with a specific role. Default is customer.
           required: false
           schema:
             type: string
+            enum:
+              - all
+              - administrator
+              - editor
+              - author
+              - contributor
+              - subscriber
+              - customer
+              - shop_manager
       responses:
         '200':
           description: Returns list of customers.
