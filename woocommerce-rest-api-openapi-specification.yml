@@ -664,7 +664,7 @@ components:
           type: string
           description: Shows where the order was created.
         version:
-          type: integer
+          type: string
           description: Version of WooCommerce which last updated the order.
         status:
           type: string
