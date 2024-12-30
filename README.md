@@ -17,4 +17,4 @@ You can take a quick look at the API in Swagger [here](https://editor.swagger.io
 Are you looking to seamlessly integrate your Java applications with WooCommerce? Look no further! The WooCommerce API Java Client is designed to make your integration process smooth and efficient. Here’s why you should consider testing and utilizing this powerful library:
 
 ## Try WooCommerce REST API Client for Java!
-Are you looking to seamlessly integrate your Java applications with WooCommerce? Look no further! Our [WooCommerce REST API Client for Java](https://github.com/wtx-labs/woocommerce-api-client-java) is designed to make your integration process smooth and efficient.
+Are you looking to seamlessly integrate your Java applications with WooCommerce? Look no further! Our [WooCommerce REST API Client for Java](https://github.com/wtx-labs/woocommerce-api-client-java) is designed to make your integration process smooth and efficient. Try it and give us your feedback!
