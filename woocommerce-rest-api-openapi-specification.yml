@@ -14,6 +14,37 @@ tags:
   - name: Reports
 paths:
   /customers:
+    post:
+      tags:
+        - Customers
+      summary: This API helps you to create a new customer.
+      operationId: createCustomer
+      requestBody:
+        description: Customer object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        '200':
+          description: Returns specified customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
     get:
       tags:
         - Customers
