@@ -36,9 +36,9 @@ Are you looking to seamlessly integrate your Java applications with WooCommerce?
 
 ✨ We're constantly improving this specification!
 💡 Have suggestions or need help?
-- [Report a Bug](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=bug_report.md)
-- [Request a Feature](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=feature_request.md)
-- [Improve Documentation](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=documentation_issue.md)
+- [Report a Bug](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=bug_report.yml)
+- [Request a Feature](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=feature_request.yml)
+- [Improve Documentation](https://github.com/wtx-labs/woocommerce-api-openapi-specification/issues/new?template=documentation_issue.yml)
 
 🚀 Happy coding! 😊
 

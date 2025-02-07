@@ -1,13 +1,80 @@
-# Feature Request Template
-name: Feature Request
-description: Suggest an idea for this project
-title: "[FEATURE] "
-labels: ["enhancement"]
+name: Feature Request ✨
+description: Suggest a new feature or improvement for the WooCommerce API specification.
+title: "[Feature]: <short description>"
+labels: ["enhancement", "api"]
+assignees: []
+
 body:
-  - type: textarea
-    id: problem
+  - type: markdown
     attributes:
-      label: Is your feature request related to a problem?
-      description: Provide a clear description of the problem
+      value: |
+        Thanks for your feature request! Please provide as much detail as possible to help us evaluate and implement your idea.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 📝 Summary
+      description: Provide a clear and concise description of the feature or improvement.
+      placeholder: "Example: Add support for filtering orders by customer email."
     validations:
       required: true
+
+  - type: input
+    id: spec_version
+    attributes:
+      label: 📌 Target Specification Version
+      description: Which version of the API spec should include this change?
+      placeholder: "e.g., 0.1.0-alpha-20250207"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: 🏗️ Feature Type
+      description: What kind of improvement are you suggesting?
+      options:
+        - New Endpoint
+        - New Parameter
+        - Schema Update
+        - Improved Documentation
+        - Standard Compliance
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: 🔍 Use Case
+      description: Describe how this feature would be used and why it is important.
+      placeholder: "Example: Developers need to filter orders based on customer emails for better searchability."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: Describe how this feature should be implemented in the OpenAPI spec.
+      placeholder: "Example: Add `customer_email` as a query parameter in `/orders` endpoint."
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: Are there alternative ways to achieve this functionality?
+      placeholder: "Example: Another approach could be adding a `search` query parameter that supports multiple fields."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: ℹ️ Additional Information
+      description: Any other details or context?
+      placeholder: "Example: References to WooCommerce API docs, screenshots, or examples."
+    validations:
+      required: false

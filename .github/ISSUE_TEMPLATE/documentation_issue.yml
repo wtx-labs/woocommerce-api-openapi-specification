@@ -1,13 +1,79 @@
-# Documentation Issue Template
-name: Documentation Issue
-description: Improve our documentation
-title: "[DOCS] "
-labels: ["documentation"]
-body:
-  - type: input
-    id: location
-    attributes:
-      label: Location of Issue
-      description: Which part of the documentation needs improvement?
-    validations:
-      required: true
+name: Documentation Issue 📖  
+description: Report an issue related to the API documentation or OpenAPI spec description.  
+title: "[Docs]: <short description>"  
+labels: ["documentation"]  
+assignees: []  
+
+body:  
+  - type: markdown  
+    attributes:  
+      value: |  
+        Thanks for helping improve the API documentation! Please describe the issue clearly so we can fix it.  
+
+  - type: textarea  
+    id: issue_summary  
+    attributes:  
+      label: 📝 Issue Summary  
+      description: Provide a clear and concise description of the problem in the documentation.  
+      placeholder: "Example: The description of the `orders` endpoint is missing pagination details."  
+    validations:  
+      required: true  
+
+  - type: input  
+    id: spec_version  
+    attributes:  
+      label: 📌 Affected Specification Version  
+      description: Which version of the API documentation has this issue?  
+      placeholder: "e.g., 0.1.0-alpha-20250207"  
+    validations:  
+      required: false  
+
+  - type: dropdown  
+    id: issue_type  
+    attributes:  
+      label: ❓ Documentation Issue Type  
+      description: What kind of issue are you reporting?  
+      options:  
+        - Missing Information  
+        - Incorrect Example  
+        - Formatting Issue  
+        - Outdated Content  
+        - Other  
+    validations:  
+      required: true  
+
+  - type: textarea  
+    id: expected_content  
+    attributes:  
+      label: ✅ Expected Content  
+      description: What should the documentation say instead?  
+      placeholder: "Example: The documentation should mention that pagination parameters (`per_page`, `page`) are required for large datasets."  
+    validations:  
+      required: false  
+
+  - type: textarea  
+    id: current_content  
+    attributes:  
+      label: ❌ Current Content (if applicable)  
+      description: What does the documentation currently say?  
+      placeholder: "Example: The `/orders` endpoint description does not mention pagination."  
+    validations:  
+      required: false  
+
+  - type: textarea  
+    id: suggested_fix  
+    attributes:  
+      label: 🛠️ Suggested Fix (if any)  
+      description: If you have an idea for how to improve the documentation, describe it here.  
+      placeholder: "Example: Add an example request with pagination parameters."  
+    validations:  
+      required: false  
+
+  - type: textarea  
+    id: additional_info  
+    attributes:  
+      label: ℹ️ Additional Information  
+      description: Any other details, links, or screenshots?  
+      placeholder: "Example: Link to WooCommerce official API docs or OpenAPI references."  
+    validations:  
+      required: false  

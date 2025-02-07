@@ -1,18 +1,91 @@
-# Bug Report Template
-name: Bug Report
-description: File a bug report to help us improve
-title: "[BUG] "
-labels: ["bug"]
+name: API Specification Issue 🛠️
+description: Report an issue related to the WooCommerce API specification.
+title: "[Bug]: <short description>"
+labels: ["bug", "api"]
+assignees: []
+
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: version
+        Thanks for taking the time to report an issue! Please fill in the details below so we can investigate it.
+
+  - type: textarea
+    id: description
     attributes:
-      label: Version
-      description: What version of our specification are you using?
-      placeholder: 0.1.1-alpha-20250207
+      label: 📝 Description
+      description: Describe the issue with the API specification.
+      placeholder: "Describe the problem with the OpenAPI spec..."
     validations:
       required: true
+
+  - type: input
+    id: spec_version
+    attributes:
+      label: 📌 Affected Specification Version
+      description: Which version of the API spec has this issue?
+      placeholder: "e.g., 0.1.0-alpha-20250207"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: ❓ Issue Type
+      description: What type of issue is this?
+      options:
+        - Incorrect Schema Definition
+        - Missing Endpoint or Parameter
+        - Inconsistency with WooCommerce API Docs
+        - Typo or Formatting Issue
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: ✅ Expected Behavior
+      description: What should the correct API specification be?
+      placeholder: "Describe what the correct OpenAPI spec should look like."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: ❌ Current Behavior
+      description: What is wrong with the current API spec?
+      placeholder: "Describe the incorrect OpenAPI definition..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: Provide steps to replicate the issue.
+      placeholder: |
+        1. Open the OpenAPI spec file
+        2. Look at the definition of `/orders`
+        3. Notice that `customer_id` is missing
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggested_fix
+    attributes:
+      label: 🛠️ Suggested Fix (if any)
+      description: If you have an idea for a fix, describe it here.
+      placeholder: "Example: Add `customer_id` as a required field in the `/orders` schema."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: ℹ️ Additional Info
+      description: Any other details or context?
+      placeholder: "Additional logs, screenshots, or context."
+    validations:
+      required: false
