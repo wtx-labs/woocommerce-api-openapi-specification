@@ -1,0 +1,13 @@
+# Feature Request Template
+name: Feature Request
+description: Suggest an idea for this project
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: Provide a clear description of the problem
+    validations:
+      required: true

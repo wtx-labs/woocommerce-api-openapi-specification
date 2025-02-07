@@ -1,0 +1,13 @@
+# Documentation Issue Template
+name: Documentation Issue
+description: Improve our documentation
+title: "[DOCS] "
+labels: ["documentation"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Location of Issue
+      description: Which part of the documentation needs improvement?
+    validations:
+      required: true
