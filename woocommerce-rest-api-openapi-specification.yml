@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: WooCommerce REST API
   description: The REST API is a powerful part of WooCommerce which lets you read and write various parts of WooCommerce data such as orders, products, coupons, customers, and shipping zones.
-  version: 0.1.1-alpha-20250207
+  version: v3
   contact:
     name: WTX Labs Team
     url: https://github.com/wtx-labs/woocommerce-api-openapi-specification
