@@ -201,6 +201,37 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
   /products:
+    post:
+      tags:
+        - Products
+      summary: This API helps you to create a new product.
+      operationId: createProduct
+      requestBody:
+        description: Product object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Returns specified product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
     get:
       tags:
         - Products
