@@ -400,6 +400,37 @@ paths:
                 $ref: '#/components/schemas/ApiError'
       x-codegen-request-body-name: product
   /orders:
+    post:
+      tags:
+        - Orders
+      summary: This API helps you to create a new order.
+      operationId: createOrder
+      requestBody:
+        description: Order object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        '200':
+          description: Returns specified order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
     get:
       tags:
         - Orders
