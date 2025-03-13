@@ -13,6 +13,7 @@ security:
 tags:
   - name: Customers
   - name: Products
+  - name: Product variations
   - name: Orders
   - name: Reports
 paths:
@@ -399,6 +400,78 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
       x-codegen-request-body-name: product
+  /products/{productId}/variations:
+    get:
+      tags:
+        - Product variations
+      summary: This API helps you to view all the product variations.
+      operationId: listAllProductVariations
+      parameters:
+        - name: productId
+          in: path
+          description: ID of parent product for variations to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns list of product variations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductVariation'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /products/{productId}/variations/{variationId}:
+    get:
+      tags:
+        - Product variations
+      summary: This API lets you retrieve and view a specific product variation by ID.
+      operationId: retrieveProductVariationById
+      parameters:
+        - name: productId
+          in: path
+          description: ID of parent product for variation to return
+          required: true
+          schema:
+            type: integer
+        - name: variationId
+          in: path
+          description: ID of variation to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariation'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /orders:
     post:
       tags:
@@ -675,60 +748,441 @@ components:
       properties:
         id:
           type: integer
-          description: Unique identifier for the resource.
-        date_created:
-          type: string
-          description: The date the product was created, in the site's timezone.
-          format: date-time
-        date_modified:
-          type: string
-          description: The date the product was last modified, in the site's timezone.
-          format: date-time
+          description: Unique identifier for the resource. read-only
         name:
           type: string
           description: Product name.
-        sku:
+        slug:
           type: string
-          description: Unique identifier.
+          description: Product slug.
+        permalink:
+          type: string
+          description: Product URL. read-only
+        date_created:
+          type: string
+          description: The date the product was created, in the site's timezone. read-only
+          format: date-time
+        date_created_gmt:
+          type: string
+          description: The date the product was created, as GMT. read-only
+          format: date-time
+        date_modified:
+          type: string
+          description: The date the product was last modified, in the site's timezone. read-only
+          format: date-time
+        date_modified_gmt:
+          type: string
+          description: The date the product was last modified, as GMT. read-only
+          format: date-time
         type:
           type: string
           description: 'Product type. Options: simple, grouped, external and variable. Default is simple.'
         status:
           type: string
           description: 'Product status (post status). Options: draft, pending, private and publish. Default is publish.'
+        featured:
+          type: boolean
+          description: Featured product. Default is false.
+        catalog_visibility:
+          type: string
+          description: 'Catalog visibility. Options: visible, catalog, search and hidden. Default is visible.'
         description:
           type: string
           description: Product description.
         short_description:
           type: string
           description: Product short description.
+        sku:
+          type: string
+          description: Unique identifier.
         price:
           type: string
-          description: Current product price.
+          description: Current product price. read-only
+        regular_price:
+          type: string
+          description: Regular product price.
+        sale_price:
+          type: string
+          description: Product sale price.
+        date_on_sale_from:
+          type: string
+          description: Start date of sale price, in the site's timezone.
+          format: date-time
+        date_on_sale_from_gmt:
+          type: string
+          description: Start date of sale price, as GMT.
+          format: date-time
+        date_on_sale_to:
+          type: string
+          description: End date of sale price, in the site's timezone.
+          format: date-time
+        date_on_sale_to_gmt:
+          type: string
+          description: End date of sale price, as GMT.
+          format: date-time
+        price_html:
+          type: string
+          description: Price formatted in HTML. read-only
+        on_sale:
+          type: boolean
+          description: Shows if the product is on sale. read-only
+        purchasable:
+          type: boolean
+          description: Shows if the product can be bought. read-only
+        total_sales:
+          type: integer
+          description: Amount of sales. read-only
+        virtual:
+          type: boolean
+          description: If the product is virtual. Default is false.
+        downloadable:
+          type: boolean
+          description: If the product is downloadable. Default is false.
+        downloads:
+          type: array
+          description: List of downloadable files.
+          items:
+            $ref: '#/components/schemas/ProductDownload'
+        download_limit:
+          type: integer
+          description: Number of times downloadable files can be downloaded after purchase. Default is -1.
+        download_expiry:
+          type: integer
+          description: Number of days until access to downloadable files expires. Default is -1.
+        external_url:
+          type: string
+          description: Product external URL. Only for external products.
+        button_text:
+          type: string
+          description: Product external button text. Only for external products.
+        tax_status:
+          type: string
+          description: 'Tax status. Options: taxable, shipping and none. Default is taxable.'
+        tax_class:
+          type: string
+          description: Tax class.
+        manage_stock:
+          type: boolean
+          description: Stock management at product level. Default is false.
         stock_quantity:
           type: integer
           description: Stock quantity.
         stock_status:
           type: string
           description: 'Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.'
+        backorders:
+          type: string
+          description: 'If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.'
+        backorders_allowed:
+          type: boolean
+          description: Shows if backorders are allowed. read-only
+        backordered:
+          type: boolean
+          description: Shows if the product is on backordered. read-only
+        sold_individually:
+          type: boolean
+          description: Allow one item to be bought in a single order. Default is false.
+        weight:
+          type: string
+          description: Product weight.
+        dimensions:
+          $ref: '#/components/schemas/ProductDimension'
+        shipping_required:
+          type: boolean
+          description: Shows if the product need to be shipped. read-only
+        shipping_taxable:
+          type: boolean
+          description: Shows whether or not the product shipping is taxable. read-only
+        shipping_class:
+          type: string
+          description: Shipping class slug.
+        shipping_class_id:
+          type: integer
+          description: Shipping class ID.
+        reviews_allowed:
+          type: boolean
+          description: Allow reviews. Default is true.
+        average_rating:
+          type: string
+          description: Reviews average rating. read-only
+        rating_count:
+          type: integer
+          description: Amount of reviews that the product have. read-only
+        related_ids:
+          type: array
+          description: List of related products IDs. read-only
+          items:
+            type: integer
+        upsell_ids:
+          type: array
+          description: List of up-sell products IDs.
+          items:
+            type: integer
+        cross_sell_ids:
+          type: array
+          description: List of cross-sell products IDs.
+          items:
+            type: integer
         parent_id:
           type: integer
           description: Product parent ID.
-        variations:
+        purchase_note:
+          type: string
+          description: Optional note to send the customer after purchase.
+        categories:
           type: array
-          description: List of variations IDs.
+          description: List of categories.
           items:
-            type: integer
+            $ref: '#/components/schemas/ProductCategory'
+        tags:
+          type: array
+          description: List of tags.
+          items:
+            $ref: '#/components/schemas/ProductTag'
+        images:
+          type: array
+          description: List of product images.
+          items:
+            $ref: '#/components/schemas/ProductImage'
         attributes:
           type: array
           description: List of attributes.
           items:
             $ref: '#/components/schemas/ProductAttribute'
+        default_attributes:
+          type: array
+          description: List of default attributes.
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        variations:
+          type: array
+          description: List of variations IDs. read-only
+          items:
+            type: integer
+        grouped_products:
+          type: array
+          description: List of grouped products ID.
+          items:
+            type: integer
+        menu_order:
+          type: integer
+          description: Menu order, used to custom sort products.
         meta_data:
           type: array
           description: Meta data properties.
           items:
             $ref: '#/components/schemas/MetaData'
+    ProductVariation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        date_created:
+          type: string
+          description: The date the variation  was created, in the site's timezone. read-only
+          format: date-time
+        date_created_gmt:
+          type: string
+          description: The date the variation  was created, as GMT. read-only
+          format: date-time
+        date_modified:
+          type: string
+          description: The date the variation  was last modified, in the site's timezone. read-only
+          format: date-time
+        date_modified_gmt:
+          type: string
+          description: The date the variation  was last modified, as GMT. read-only
+          format: date-time
+        description:
+          type: string
+          description: Variation description.
+        permalink:
+          type: string
+          description: Variation URL. read-only
+        sku:
+          type: string
+          description: Unique identifier.
+        price:
+          type: string
+          description: Current variation price. read-only
+        regular_price:
+          type: string
+          description: Variation product price.
+        sale_price:
+          type: string
+          description: Variation sale price.
+        date_on_sale_from:
+          type: string
+          description: Start date of sale price, in the site's timezone.
+          format: date-time
+        date_on_sale_from_gmt:
+          type: string
+          description: Start date of sale price, as GMT.
+          format: date-time
+        date_on_sale_to:
+          type: string
+          description: End date of sale price, in the site's timezone.
+          format: date-time
+        date_on_sale_to_gmt:
+          type: string
+          description: End date of sale price, as GMT.
+          format: date-time
+        on_sale:
+          type: boolean
+          description: Shows if the variation is on sale. read-only
+        status:
+          type: string
+          description: 'Variation status. Options: draft, pending, private and publish. Default is publish.'
+        purchasable:
+          type: boolean
+          description: Shows if the variation can be bought. read-only
+        virtual:
+          type: boolean
+          description: If the variation is virtual. Default is false.
+        downloadable:
+          type: boolean
+          description: If the variation is downloadable. Default is false.
+        downloads:
+          type: array
+          description: List of downloadable files.
+          items:
+            $ref: '#/components/schemas/ProductDownload'
+        download_limit:
+          type: integer
+          description: Number of times downloadable files can be downloaded after purchase. Default is -1.
+        download_expiry:
+          type: integer
+          description: Number of days until access to downloadable files expires. Default is -1.
+        tax_status:
+          type: string
+          description: 'Tax status. Options: taxable, shipping and none. Default is taxable.'
+        tax_class:
+          type: string
+          description: Tax class.
+        manage_stock:
+          type: boolean
+          description: Stock management at variation level. Default is false.
+        stock_quantity:
+          type: integer
+          description: Stock quantity.
+        stock_status:
+          type: string
+          description: 'Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.'
+        backorders:
+          type: string
+          description: 'If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.'
+        backorders_allowed:
+          type: boolean
+          description: Shows if backorders are allowed. read-only
+        backordered:
+          type: boolean
+          description: Shows if the variation is on backordered. read-only
+        weight:
+          type: string
+          description: Variation weight.
+        dimensions:
+          $ref: '#/components/schemas/ProductDimension'
+        shipping_class:
+          type: string
+          description: Shipping class slug.
+        shipping_class_id:
+          type: integer
+          description: Shipping class ID.
+        image:
+          $ref: '#/components/schemas/ProductImage'
+        attributes:
+          type: array
+          description: List of attributes.
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        menu_order:
+          type: integer
+          description: Menu order, used to custom sort products.
+        meta_data:
+          type: array
+          description: Meta data properties.
+          items:
+            $ref: '#/components/schemas/MetaData'
+    ProductDownload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: File ID.
+        name:
+          type: string
+          description: File name.
+        file:
+          type: string
+          description: File URL.
+    ProductDimension:
+      type: object
+      properties:
+        length:
+          type: string
+          description: Product length.
+        width:
+          type: string
+          description: Product width.
+        height:
+          type: string
+          description: Product height.
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Image ID.
+        date_created:
+          type: string
+          description: The date the image was created, in the site's timezone. read-only
+          format: date-time
+        date_created_gmt:
+          type: string
+          description: The date the image was created, as GMT. read-only
+          format: date-time
+        date_modified:
+          type: string
+          description: The date the image was last modified, in the site's timezone. read-only
+          format: date-time
+        date_modified_gmt:
+          type: string
+          description: The date the image was last modified, as GMT. read-only
+          format: date-time
+        src:
+          type: string
+          description: Image URL.
+        name:
+          type: string
+          description: Image name.
+        alt:
+          type: string
+          description: Image alternative text.
+    ProductCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Category ID.
+        name:
+          type: string
+          description: Category name. read-only
+        slug:
+          type: string
+          description: Category slug. read-only
+    ProductTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Tag ID.
+        name:
+          type: string
+          description: Tag name. read-only
+        slug:
+          type: string
+          description: Tag slug. read-only
     ProductAttribute:
       type: object
       properties:
