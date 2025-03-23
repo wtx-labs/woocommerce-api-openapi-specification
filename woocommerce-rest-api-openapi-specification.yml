@@ -201,6 +201,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Customers
+      summary: This API lets you make changes to a customer.
+      operationId: updateCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Customer object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        '200':
+          description: Returns updated customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-codegen-request-body-name: customer
+    delete:
+      tags:
+        - Customers
+      summary: This API helps you delete a customer.
+      operationId: deleteCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: string
+        - name: reassign
+          in: query
+          description: User ID to reassign posts to.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns deleted customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'  
   /products:
     post:
       tags:
