@@ -3,6 +3,7 @@ info:
   title: WooCommerce REST API
   description: The REST API is a powerful part of WooCommerce which lets you read and write various parts of WooCommerce data such as orders, products, coupons, customers, and shipping zones.
   version: v3
+  specVersion: 0.1.5-alpha-20250412
   contact:
     name: WTX Labs Team
     url: https://github.com/wtx-labs/woocommerce-api-openapi-specification
