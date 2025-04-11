@@ -482,7 +482,83 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
       x-codegen-request-body-name: product
+    delete:
+      tags:
+        - Products
+      summary: This API helps you delete a product.
+      operationId: deleteProductById
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /products/{productId}/variations:
+    post:
+      tags:
+        - Product variations
+      summary: This API helps you to create a new product variation.
+      operationId: createProductVariation
+      parameters:
+        - name: productId
+          in: path
+          description: ID of parent product for variation to create
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Product variation object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductVariation'
+        required: true
+      responses:
+        '200':
+          description: Returns created product variation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariation'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
     get:
       tags:
         - Product variations
@@ -683,6 +759,44 @@ paths:
       responses:
         '200':
           description: Returns specified order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Orders
+      summary: This API helps you delete an order.
+      operationId: deleteOrderById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted order.
           content:
             application/json:
               schema:
