@@ -1,4 +1,4 @@
-# specVersion: 0.1.5-alpha-20250412
+# specVersion: 0.1.6-alpha-20250609
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -360,8 +360,7 @@ paths:
         - name: status
           in: query
           description: 'Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.'
-          style: form
-          explode: true
+          explode: false
           schema:
             type: array
             items:
@@ -697,8 +696,7 @@ paths:
         - name: status
           in: query
           description: 'Limit result set to orders assigned a specific status. Options: any, pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is any.'
-          style: form
-          explode: true
+          explode: false
           schema:
             type: array
             items:
