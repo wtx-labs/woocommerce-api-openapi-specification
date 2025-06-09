@@ -1,4 +1,4 @@
-# specVersion: 0.1.6-alpha-20250609
+# specVersion: 0.1.7-alpha-20250609
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -58,68 +58,63 @@ paths:
       parameters:
         - name: context
           in: query
-          description: Scope under which the request is made; determines fields present in response.
-          required: false
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
           schema:
             type: string
             enum:
               - view
               - edit
+            default: view
         - name: page
           in: query
-          description: Current page of the collection.
-          required: false
+          description: 'Current page of the collection. Default is 1.'
           schema:
             type: integer
             default: 1
         - name: per_page
           in: query
-          description: Maximum number of items to be returned in result set.
-          required: false
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
           schema:
             type: integer
             default: 10
         - name: search
           in: query
-          description: Limit results to those matching a string.
-          required: false
+          description: 'Limit results to those matching a string.'
           schema:
             type: string
         - name: exclude
           in: query
-          description: Ensure result set excludes specific IDs.
-          required: false
+          description: 'Ensure result set excludes specific IDs.'
+          explode: false
           schema:
             type: array
             items:
               type: integer
         - name: include
           in: query
-          description: Limit result set to specific IDs.
-          required: false
+          description: 'Limit result set to specific IDs.'
+          explode: false
           schema:
             type: array
             items:
               type: integer
         - name: offset
           in: query
-          description: Offset the result set by a specific number of items.
-          required: false
+          description: 'Offset the result set by a specific number of items.'
           schema:
             type: integer
         - name: order
           in: query
-          description: Order sort attribute ascending or descending (asc as default).
-          required: false
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is asc.'
           schema:
             type: string
             enum:
               - asc
               - desc
+            default: asc
         - name: orderby
           in: query
-          description: Sort collection by object attribute.
-          required: false
+          description: 'Sort collection by object attribute. Options: id, include, name and registered_date. Default is name.'
           schema:
             type: string
             enum:
@@ -127,17 +122,15 @@ paths:
               - include
               - name
               - registered_date
-              - email
+            default: name
         - name: email
           in: query
-          description: Limit result set to resources with a specific email address.
-          required: false
+          description: 'Limit result set to resources with a specific email.'
           schema:
             type: string
         - name: role
           in: query
-          description: Limit result set to resources with a specific role. Default is customer.
-          required: false
+          description: 'Limit result set to resources with a specific role. Options: all, administrator, editor, author, contributor, subscriber, customer and shop_manager. Default is customer.'
           schema:
             type: string
             enum:
@@ -149,6 +142,7 @@ paths:
               - subscriber
               - customer
               - shop_manager
+            default: customer
       responses:
         '200':
           description: Returns list of customers.
@@ -322,39 +316,123 @@ paths:
       summary: This API helps you to view all the products.
       operationId: listAllProducts
       parameters:
-        - name: sku
+        - name: context
           in: query
-          description: Limit result set to products with a specific SKU.
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
           schema:
             type: string
-        - name: attribute
-          in: query
-          description: Limit result set to products with a specific attribute.
-          schema:
-            type: string
-        - name: per_page
-          in: query
-          description: Maximum number of items to be returned in result set. Default is 10.
-          schema:
-            type: integer
+            enum:
+              - view
+              - edit
+            default: view
         - name: page
           in: query
           description: Current page of the collection. Default is 1.
           schema:
             type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
         - name: after
           in: query
-          description: Limit response to resources published after a given ISO8601 compliant date (eg. 2023-05-07T10:00:00).
+          description: Limit response to resources published after a given ISO8601 compliant date.
           schema:
             type: string
         - name: before
           in: query
-          description: Limit response to resources published before a given ISO8601 compliant date (eg. 2023-10-07T12:10:16).
+          description: Limit response to resources published before a given ISO8601 compliant date.
           schema:
             type: string
         - name: modified_after
           in: query
-          description: Limit response to resources modified after a given ISO8601 compliant date. (eg. 2023-05-07T10:00:00).
+          description: Limit response to resources modified after a given ISO8601 compliant date.
+          schema:
+            type: string
+        - name: modified_before
+          in: query
+          description: Limit response to resources modified before a given ISO8601 compliant date.
+          schema:
+            type: string
+        - name: dates_are_gmt
+          in: query
+          description: Whether to consider GMT post dates when limiting response by published or modified date.
+          schema:
+            type: boolean
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids.
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: 'Sort collection by object attribute. Options: date, modified, id, include, title, slug, price, popularity, rating, and menu_order. Default is date.'
+          schema:
+            type: string
+            enum:
+              - date
+              - modified
+              - id
+              - include
+              - title
+              - slug
+              - price
+              - popularity
+              - rating
+              - menu_order
+            default: date
+        - name: parent
+          in: query
+          description: Limit result set to those of particular parent IDs.
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: parent_exclude
+          in: query
+          description: Limit result set to all items except those of a particular parent ID.
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: slug
+          in: query
+          description: Limit result set to products with a specific slug.
           schema:
             type: string
         - name: status
@@ -365,13 +443,139 @@ paths:
             type: array
             items:
               type: string
-              default: any
               enum:
                 - any
                 - draft
                 - pending
                 - private
                 - publish
+              default: any
+        - name: include_status
+          in: query
+          description: 'Limit result set to products with any of the specified statuses. Multiple statuses can be provided as a comma-separated list. Takes precedence over the status parameter. Options: any, future, trash, draft, pending, private, and publish.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - any
+                - future
+                - trash
+                - draft
+                - pending
+                - private
+                - publish
+        - name: exclude_status
+          in: query
+          description: 'Exclude products from result set with any of the specified statuses. Multiple statuses can be provided as a comma-separated list. Takes precedence over the include_status parameter. Options: future, trash, draft, pending, private, and publish.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - future
+                - trash
+                - draft
+                - pending
+                - private
+                - publish
+        - name: type
+          in: query
+          description: 'Limit result set to products assigned a specific type. Options: simple, grouped, external and variable.'
+          schema:
+            type: string
+            enum:
+              - simple
+              - grouped
+              - external
+              - variable
+        - name: include_types
+          in: query
+          description: 'Limit result set to products with any of the types. Multiple statuses can be provided as a comma-separated list. Takes precedence over the type parameter. Options: simple, grouped, external and variable.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - simple
+                - grouped
+                - external
+                - variable
+        - name: exclude_types
+          in: query
+          description: 'Exclude products from result set with any of the specified types. Multiple statuses can be provided as a comma-separated list. Takes precedence over the include_types parameter. Options: simple, grouped, external and variable.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - simple
+                - grouped
+                - external
+                - variable
+        - name: sku
+          in: query
+          description: Limit result set to products with a specific SKU.
+          schema:
+            type: string
+        - name: featured
+          in: query
+          description: Limit result set to featured products.
+          schema:
+            type: boolean
+        - name: category
+          in: query
+          description: Limit result set to products assigned a specific category ID.
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: Limit result set to products assigned a specific tag ID.
+          schema:
+            type: string
+        - name: shipping_class
+          in: query
+          description: Limit result set to products assigned a specific shipping class ID.
+          schema:
+            type: string
+        - name: attribute
+          in: query
+          description: Limit result set to products with a specific attribute.
+          schema:
+            type: string
+        - name: attribute_term
+          in: query
+          description: Limit result set to products with a specific attribute term ID (required an assigned attribute).
+          schema:
+            type: string
+        - name: tax_class
+          in: query
+          description: 'Limit result set to products with a specific tax class. Default options: standard, reduced-rate and zero-rate.'
+          schema:
+            type: string
+            enum:
+              - standard
+              - reduced-rate
+              - zero-rate
+        - name: on_sale
+          in: query
+          description: Limit result set to products on sale.
+          schema:
+            type: boolean
+        - name: min_price
+          in: query
+          description: Limit result set to products based on a minimum price.
+          schema:
+            type: string
+        - name: max_price
+          in: query
+          description: Limit result set to products based on a maximum price.
+          schema:
+            type: string
         - name: stock_status
           in: query
           description: 'Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.'
@@ -381,15 +585,17 @@ paths:
               - instock
               - outofstock
               - onbackorder
-        - name: order
+        - name: virtual
           in: query
-          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          description: Limit result set to virtual products.
           schema:
-            type: string
-            default: desc
-            enum:
-              - asc
-              - desc
+            type: boolean
+        - name: downloadable
+          in: query
+          description: Limit result set to downloadable products.
+          schema:
+            type: boolean
+
       responses:
         '200':
           description: Returns list of products.
@@ -567,10 +773,206 @@ paths:
       parameters:
         - name: productId
           in: path
-          description: ID of parent product for variations to return
+          description: 'ID of parent product for variations to return'
           required: true
           schema:
             type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          schema:
+            type: string
+        - name: after
+          in: query
+          description: 'Limit response to resources published after a given ISO8601 compliant date.'
+          schema:
+            type: string
+            format: date-time
+        - name: before
+          in: query
+          description: 'Limit response to resources published before a given ISO8601 compliant date.'
+          schema:
+            type: string
+            format: date-time
+        - name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: 'Limit result set to specific ids.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: 'Sort collection by object attribute. Options: date, modified, id, include, title and slug. Default is date.'
+          schema:
+            type: string
+            enum:
+              - date
+              - modified
+              - id
+              - include
+              - title
+              - slug
+            default: date
+        - name: parent
+          in: query
+          description: 'Limit result set to those of particular parent IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: parent_exclude
+          in: query
+          description: 'Limit result set to all items except those of a particular parent ID.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: slug
+          in: query
+          description: 'Limit result set to products with a specific slug.'
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 'Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              default: any
+              enum:
+                - any
+                - draft
+                - pending
+                - private
+                - publish
+        - name: include_status
+          in: query
+          description: 'Limit result set to product variations with any of the specified statuses. Multiple statuses can be provided as a comma-separated list. Takes precedence over the status parameter. Options: any, future, trash, draft, pending, private, and publish.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - any
+                - future
+                - trash
+                - draft
+                - pending
+                - private
+                - publish
+        - name: exclude_status
+          in: query
+          description: 'Exclude product variations from result set with any of the specified statuses. Multiple statuses can be provided as a comma-separated list. Takes precedence over the include_status parameter. Options: future, trash, draft, pending, private, and publish.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - future
+                - trash
+                - draft
+                - pending
+                - private
+                - publish
+        - name: sku
+          in: query
+          description: 'Limit result set to products with a specific SKU.'
+          schema:
+            type: string
+        - name: tax_class
+          in: query
+          description: 'Limit result set to products with a specific tax class. Default options: standard, reduced-rate and zero-rate.'
+          schema:
+            type: string
+            enum:
+              - standard
+              - reduced-rate
+              - zero-rate
+        - name: on_sale
+          in: query
+          description: 'Limit result set to products on sale.'
+          schema:
+            type: boolean
+        - name: min_price
+          in: query
+          description: 'Limit result set to products based on a minimum price.'
+          schema:
+            type: string
+        - name: max_price
+          in: query
+          description: 'Limit result set to products based on a maximum price.'
+          schema:
+            type: string
+        - name: stock_status
+          in: query
+          description: 'Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.'
+          schema:
+            type: string
+            enum:
+              - instock
+              - outofstock
+              - onbackorder
+        - name: virtual
+          in: query
+          description: 'Limit result set to virtual product variations.'
+          schema:
+            type: boolean
+        - name: downloadable
+          in: query
+          description: 'Limit result set to downloadable product variations.'
+          schema:
+            type: boolean
       responses:
         '200':
           description: Returns list of product variations.
@@ -630,6 +1032,95 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Product variations
+      summary: 'This API lets you make changes to a product variation.'
+      operationId: updateProductVariationById
+      parameters:
+        - name: productId
+          in: path
+          description: 'ID of parent product for variation to update'
+          required: true
+          schema:
+            type: integer
+        - name: variationId
+          in: path
+          description: 'ID of variation to update'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Product variation object with data to update.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductVariation'
+        required: true
+      responses:
+        '200':
+          description: 'Returns updated product variation.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariation'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-codegen-request-body-name: productVariation
+    delete:
+      tags:
+        - Product variations
+      summary: 'This API helps you delete a product variation.'
+      operationId: deleteProductVariationById
+      parameters:
+        - name: productId
+          in: path
+          description: 'ID of parent product for variation to delete'
+          required: true
+          schema:
+            type: integer
+        - name: variationId
+          in: path
+          description: 'ID of variation to delete'
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: 'Required to be true, as resource does not support trashing.'
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: 'Returns deleted product variation.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariation'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /orders:
     post:
       tags:
@@ -668,31 +1159,120 @@ paths:
       summary: This API helps you to view all the orders.
       operationId: listAllOrders
       parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
         - name: page
           in: query
-          description: Current page of the collection. Default is 1.
+          description: 'Current page of the collection. Default is 1.'
           schema:
             type: integer
+            default: 1
         - name: per_page
           in: query
-          description: Maximum number of items to be returned in result set. Default is 10.
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
           schema:
             type: integer
+            default: 10
+        - name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          schema:
+            type: string
         - name: after
           in: query
-          description: Limit response to resources published after a given ISO8601 compliant date (eg. 2023-05-07T10:00:00).
+          description: 'Limit response to resources published after a given ISO8601 compliant date.'
           schema:
             type: string
+            format: date-time
         - name: before
           in: query
-          description: Limit response to resources published before a given ISO8601 compliant date (eg. 2023-10-07T12:10:16).
+          description: 'Limit response to resources published before a given ISO8601 compliant date.'
           schema:
             type: string
+            format: date-time
         - name: modified_after
           in: query
-          description: Limit response to resources modified after a given ISO8601 compliant date. (eg. 2023-05-07T10:00:00).
+          description: 'Limit response to resources modified after a given ISO8601 compliant date.'
           schema:
             type: string
+            format: date-time
+        - name: modified_before
+          in: query
+          description: 'Limit response to resources modified before a given ISO8601 compliant date.'
+          schema:
+            type: string
+            format: date-time
+        - name: dates_are_gmt
+          in: query
+          description: 'Whether to consider GMT post dates when limiting response by published or modified date.'
+          schema:
+            type: boolean
+        - name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: 'Limit result set to specific ids.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: 'Sort collection by object attribute. Options: date, modified, id, include, title and slug. Default is date.'
+          schema:
+            type: string
+            enum:
+              - date
+              - modified
+              - id
+              - include
+              - title
+              - slug
+            default: date
+        - name: parent
+          in: query
+          description: 'Limit result set to those of particular parent IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: parent_exclude
+          in: query
+          description: 'Limit result set to all items except those of a particular parent ID.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
         - name: status
           in: query
           description: 'Limit result set to orders assigned a specific status. Options: any, pending, processing, on-hold, completed, cancelled, refunded, failed and trash. Default is any.'
@@ -701,7 +1281,6 @@ paths:
             type: array
             items:
               type: string
-              default: any
               enum:
                 - any
                 - pending
@@ -712,15 +1291,23 @@ paths:
                 - refunded
                 - failed
                 - trash
-        - name: order
+              default: any
+        - name: customer
           in: query
-          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          description: 'Limit result set to orders assigned a specific customer.'
           schema:
-            type: string
-            default: desc
-            enum:
-              - asc
-              - desc
+            type: integer
+        - name: product
+          in: query
+          description: 'Limit result set to orders assigned a specific product.'
+          schema:
+            type: integer
+        - name: dp
+          in: query
+          description: 'Number of decimal points to use in each resource. Default is 2.'
+          schema:
+            type: integer
+            default: 2
       responses:
         '200':
           description: Returns list of orders.
@@ -774,6 +1361,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Orders
+      summary: 'This API lets you make changes to an order.'
+      operationId: updateOrderById
+      parameters:
+        - name: orderId
+          in: path
+          description: 'ID of order to update'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Order object with data to update.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        '200':
+          description: 'Returns updated order.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-codegen-request-body-name: order
     delete:
       tags:
         - Orders
