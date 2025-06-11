@@ -10,7 +10,7 @@ The WooCommerce REST API specification in OpenAPI 3.0 format.
 
 ## 📦 Version Information
 
-- **Current Version**: `0.1.7-alpha-20250609`
+- **Current Version**: `0.9.4`
 - **OpenAPI Specification Version**: `3.0`
 - **Supported WooCommerce API Version**: `v3`
 

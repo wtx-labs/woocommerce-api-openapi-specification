@@ -1,4 +1,4 @@
-# specVersion: 0.1.7-alpha-20250609
+# specVersion: 0.9.4
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -15,6 +15,7 @@ tags:
   - name: Customers
   - name: Products
   - name: Product variations
+  - name: Product categories
   - name: Orders
   - name: Reports
 paths:
@@ -1121,6 +1122,202 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /products/categories:
+    post:
+      tags:
+        - Product categories
+      summary: Create a new product category
+      operationId: createProductCategory
+      requestBody:
+        description: Product category object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCategory'
+        required: true
+      responses:
+        '200':
+          description: Returns created product category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCategory'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    get:
+      tags:
+        - Product categories
+      summary: List all product categories
+      operationId: listAllProductCategories
+      parameters:
+        - name: context
+          in: query
+          description: Scope under which the request is made; determines fields present in response
+          schema:
+            type: string
+            enum: [view, edit]
+            default: view
+        - name: page
+          in: query
+          description: Current page of the collection
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string
+          schema:
+            type: string
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific ids
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: orderby
+          in: query
+          description: Sort collection by resource attribute
+          schema:
+            type: string
+            enum: [id, include, name, slug, term_group, description, count]
+            default: name
+        - name: hide_empty
+          in: query
+          description: Whether to hide resources not assigned to any products
+          schema:
+            type: boolean
+            default: false
+        - name: parent
+          in: query
+          description: Limit result set to resources assigned to a specific parent
+          schema:
+            type: integer
+        - name: product
+          in: query
+          description: Limit result set to resources assigned to a specific product
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          description: Limit result set to resources with a specific slug
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns list of product categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductCategory'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+  /products/categories/{categoryId}:
+    get:
+      tags:
+        - Product categories
+      summary: Retrieve a product category
+      operationId: retrieveProductCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of product category to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified product category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCategory'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - Product categories
+      summary: Update a product category
+      operationId: updateProductCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of product category to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Product category object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCategory'
+        required: true
+      responses:
+        '200':
+          description: Returns updated product category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCategory'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - Product categories
+      summary: Delete a product category
+      operationId: deleteProductCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of product category to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Product category deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCategory'
   /orders:
     post:
       tags:
@@ -1754,7 +1951,7 @@ components:
           type: array
           description: List of categories.
           items:
-            $ref: '#/components/schemas/ProductCategory'
+            $ref: '#/components/schemas/ProductCategoriesItem'
         tags:
           type: array
           description: List of tags.
@@ -1980,7 +2177,7 @@ components:
         alt:
           type: string
           description: Image alternative text.
-    ProductCategory:
+    ProductCategoriesItem:
       type: object
       properties:
         id:
@@ -2016,6 +2213,41 @@ components:
         option:
           type: string
           description: Selected attribute term name. Applicable only for Product represents SKU (variation)
+    ProductCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource.
+          readOnly: true
+        name:
+          type: string
+          description: Category name.
+        slug:
+          type: string
+          description: An alphanumeric identifier for the resource unique to its type.
+        parent:
+          type: integer
+          description: The ID for the parent of the resource.
+        description:
+          type: string
+          description: HTML description of the resource.
+        display:
+          type: string
+          description: Category archive display type.
+          enum: [default, products, subcategories, both]
+          default: default
+        image:
+          $ref: '#/components/schemas/ProductImage'
+        menu_order:
+          type: integer
+          description: Menu order, used to custom sort the resource.
+        count:
+          type: integer
+          description: Number of published products for the resource.
+          readOnly: true
+      required:
+        - name
     Order:
       type: object
       properties:
