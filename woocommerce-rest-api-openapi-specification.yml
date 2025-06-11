@@ -293,8 +293,8 @@ paths:
               $ref: '#/components/schemas/Product'
         required: true
       responses:
-        '200':
-          description: Returns specified product.
+        '201':
+          description: Returns created product.
           content:
             application/json:
               schema:
@@ -727,6 +727,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /products/{productId}/duplicate:
+    post:
+      tags:
+        - Products
+      summary: This API helps you to duplicate a product.
+      operationId: duplicateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to duplicate
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Returns newly duplicated product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /products/{productId}/variations:
     post:
       tags:
@@ -748,7 +780,7 @@ paths:
               $ref: '#/components/schemas/ProductVariation'
         required: true
       responses:
-        '200':
+        '201':
           description: Returns created product variation.
           content:
             application/json:
@@ -1126,7 +1158,7 @@ paths:
     post:
       tags:
         - Product categories
-      summary: Create a new product category
+      summary: This API helps you to create a new product category.
       operationId: createProductCategory
       requestBody:
         description: Product category object with data to create
@@ -1136,7 +1168,7 @@ paths:
               $ref: '#/components/schemas/ProductCategory'
         required: true
       responses:
-        '200':
+        '201':
           description: Returns created product category
           content:
             application/json:
@@ -1149,7 +1181,7 @@ paths:
     get:
       tags:
         - Product categories
-      summary: List all product categories
+      summary: This API lets you retrieve all product categories.
       operationId: listAllProductCategories
       parameters:
         - name: context
@@ -1242,7 +1274,7 @@ paths:
     get:
       tags:
         - Product categories
-      summary: Retrieve a product category
+      summary: This API lets you retrieve a product category by ID.
       operationId: retrieveProductCategory
       parameters:
         - name: categoryId
@@ -1265,7 +1297,7 @@ paths:
     put:
       tags:
         - Product categories
-      summary: Update a product category
+      summary: This API lets you make changes to a product category.
       operationId: updateProductCategory
       parameters:
         - name: categoryId
@@ -1295,7 +1327,7 @@ paths:
     delete:
       tags:
         - Product categories
-      summary: Delete a product category
+      summary: This API helps you delete a product category.
       operationId: deleteProductCategory
       parameters:
         - name: categoryId
@@ -1332,8 +1364,8 @@ paths:
               $ref: '#/components/schemas/Order'
         required: true
       responses:
-        '200':
-          description: Returns specified order.
+        '201':
+          description: Returns created order.
           content:
             application/json:
               schema:
