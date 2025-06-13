@@ -1,4 +1,4 @@
-# specVersion: 0.9.4
+# specVersion: 0.9.5
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -2305,6 +2305,7 @@ components:
           type: string
           description: Order status.
           enum:
+            - checkout-draft
             - pending
             - processing
             - on-hold
@@ -2482,15 +2483,19 @@ components:
         date_created:
           type: string
           description: The date the order was created, in the site's timezone.
+          format: date-time
         date_created_gmt:
           type: string
           description: The date the order was created, as GMT.
+          format: date-time
         date_modified:
           type: string
           description: The date the order was last modified, in the site's timezone.
+          format: date-time
         date_modified_gmt:
           type: string
           description: The date the order was last modified, as GMT.
+          format: date-time
         discount_total:
           type: string
           description: Total discount amount for the order.
@@ -2543,15 +2548,19 @@ components:
         date_paid:
           type: string
           description: The date the order was paid, in the site's timezone.
+          format: date-time
         date_paid_gmt:
           type: string
           description: The date the order was paid, as GMT.
+          format: date-time
         date_completed:
           type: string
           description: The date the order was completed, in the site's timezone.
+          format: date-time
         date_completed_gmt:
           type: string
           description: The date the order was completed, as GMT.
+          format: date-time
         cart_hash:
           type: string
           description: MD5 hash of cart items to ensure orders are not modified.
@@ -2883,7 +2892,7 @@ components:
         total_shipping:
           type: string
         total_refunds:
-          type: integer
+          type: number
         total_discount:
           type: string
         totals_grouped_by:
