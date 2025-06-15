@@ -2303,16 +2303,7 @@ components:
           description: Version of WooCommerce which last updated the order.
         status:
           type: string
-          description: Order status.
-          enum:
-            - checkout-draft
-            - pending
-            - processing
-            - on-hold
-            - completed
-            - cancelled
-            - refunded
-            - failed
+          description: Order status. Options - pending, processing, on-hold, completed, cancelled, refunded, failed, trash and checkout-draft. Default is pending.
         currency:
           type: string
           description: Currency the order was created with, in ISO format.
@@ -2681,7 +2672,7 @@ components:
           type: string
           description: Parent product name if the product is a variation.
         product_id:
-          type: string
+          type: integer
           description: Product ID.
         variation_id:
           type: integer
@@ -2792,10 +2783,7 @@ components:
           description: Tax class of fee.
         tax_status:
           type: string
-          description: Tax status of fee.
-          enum:
-            - taxable
-            - none
+          description: Tax status of fee. Options taxable and none.
         total:
           type: string
           description: Line total (after discounts).
