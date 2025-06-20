@@ -1882,6 +1882,7 @@ components:
         total_sales:
           type: integer
           description: Amount of sales. read-only
+          format: int64
         virtual:
           type: boolean
           description: If the product is virtual. Default is false.
