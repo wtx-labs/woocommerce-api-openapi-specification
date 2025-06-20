@@ -1,4 +1,4 @@
-# specVersion: 0.9.6
+# specVersion: 0.9.7
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -13,10 +13,15 @@ security:
   - basicAuth: []
 tags:
   - name: Customers
+  - name: Orders
   - name: Products
   - name: Product variations
+  - name: Product attributes
+  - name: Product attribute terms
   - name: Product categories
-  - name: Orders
+  - name: Product shipping classes
+  - name: Product tags
+  - name: Product reviews
   - name: Reports
 paths:
   /customers:
@@ -279,6 +284,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'  
+  /customers/batch:
+    post:
+      tags: [Customers]
+      summary: Batch create, update, and delete customers
+      operationId: batchCustomers
+      requestBody:
+        description: Batch create, update, and delete customers
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Customer'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Customer'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
   /products:
     post:
       tags:
@@ -759,6 +808,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /products/batch:
+    post:
+      tags:
+        - Products
+      summary: Batch create, update, and delete products
+      operationId: batchProducts
+      requestBody:
+        description: Batch create, update, and delete products
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Product'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Product'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
   /products/{productId}/variations:
     post:
       tags:
@@ -1154,6 +1248,470 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /products/{productId}/variations/batch:
+    post:
+      tags:
+        - Product variations
+      summary: Batch create, update, and delete product variations
+      operationId: batchProductVariations
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Batch create, update, and delete product variations
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductVariation'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductVariation'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductVariation'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductVariation'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductVariation'
+  /products/attributes:
+    get:
+      tags:
+        - Product attributes
+      summary: List all product attributes
+      operationId: listAllProductAttributes
+      parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+      responses:
+        '200':
+          description: Returns list of product attributes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductAttribute'
+    post:
+      tags:
+        - Product attributes
+      summary: Create a product attribute
+      operationId: createProductAttribute
+      requestBody:
+        description: Product attribute object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductAttribute'
+        required: true
+      responses:
+        '201':
+          description: Returns created product attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttribute'
+  /products/attributes/{attributeId}:
+    get:
+      tags:
+        - Product attributes
+      summary: Retrieve a product attribute
+      operationId: retrieveProductAttribute
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified product attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttribute'
+    put:
+      tags:
+        - Product attributes
+      summary: Update a product attribute
+      operationId: updateProductAttribute
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Product attribute object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductAttribute'
+        required: true
+      responses:
+        '200':
+          description: Returns updated product attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttribute'
+    delete:
+      tags:
+        - Product attributes
+      summary: Delete a product attribute
+      operationId: deleteProductAttribute
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Product attribute deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttribute'
+  /products/attributes/batch:
+    post:
+      tags:
+        - Product attributes
+      summary: Batch update product attributes
+      operationId: batchUpdateProductAttributes
+      requestBody:
+        description: Batch create, update, delete product attributes
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductAttribute'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductAttribute'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Returns batch operation result
+          content:
+            application/json:
+              schema:
+                type: object
+  /products/attributes/{attributeId}/terms:
+    get:
+      tags:
+        - Product attribute terms
+      summary: List all terms for a product attribute
+      operationId: listAllAttributeTerms
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: Current page of the collection. Default is 1.
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: orderby
+          in: query
+          description: 'Sort collection by resource attribute. Options: name, slug, term_group, description, count. Default is name.'
+          schema:
+            type: string
+            enum:
+              - name
+              - slug
+              - term_group
+              - description
+              - count
+            default: name
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is asc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+        - name: hide_empty
+          in: query
+          description: Whether to hide resources not assigned to any products. Default is false.
+          schema:
+            type: boolean
+            default: false
+        - name: parent
+          in: query
+          description: Limit result set to resources assigned to a specific parent.
+          schema:
+            type: integer
+        - name: product
+          in: query
+          description: Limit result set to resources assigned to a specific product.
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          description: Limit result set to resources with a specific slug.
+          schema:
+            type: string
+        - name: include
+          in: query
+          description: Limit result set to specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        '200':
+          description: Returns list of attribute terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductAttributeTerm'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Product attribute terms
+      summary: Create an attribute term
+      operationId: createAttributeTerm
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Attribute term object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductAttributeTerm'
+        required: true
+      responses:
+        '201':
+          description: Returns created attribute term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttributeTerm'
+  /products/attributes/{attributeId}/terms/{termId}:
+    get:
+      tags:
+        - Product attribute terms
+      summary: Retrieve an attribute term
+      operationId: retrieveAttributeTerm
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: termId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified attribute term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttributeTerm'
+    put:
+      tags:
+        - Product attribute terms
+      summary: Update an attribute term
+      operationId: updateAttributeTerm
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: termId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Attribute term object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductAttributeTerm'
+        required: true
+      responses:
+        '200':
+          description: Returns updated attribute term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttributeTerm'
+    delete:
+      tags:
+        - Product attribute terms
+      summary: Delete an attribute term
+      operationId: deleteAttributeTerm
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: termId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          required: true
+          description: Required to be true, as resource does not support trashing.
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Attribute term deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAttributeTerm'
+  /products/attributes/{attributeId}/terms/batch:
+    post:
+      tags:
+        - Product attribute terms
+      summary: Batch update attribute terms
+      operationId: batchUpdateAttributeTerms
+      parameters:
+        - name: attributeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Batch create, update, delete attribute terms
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductAttributeTerm'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductAttributeTerm'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Returns batch operation result
+          content:
+            application/json:
+              schema:
+                type: object
   /products/categories:
     post:
       tags:
@@ -1350,6 +1908,530 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductCategory'
+  /products/categories/batch:
+    post:
+      tags:
+        - Product categories
+      summary: Batch create, update, and delete product categories
+      operationId: batchProductCategories
+      requestBody:
+        description: Batch create, update, and delete product categories
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductCategory'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductCategory'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductCategory'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductCategory'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductCategory'
+  /products/shipping-classes:
+    get:
+      tags:
+        - Product shipping classes
+      summary: List all shipping classes
+      operationId: listAllShippingClasses
+      parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: Current page of the collection. Default is 1.
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: orderby
+          in: query
+          description: 'Sort collection by resource attribute. Options: id, include, name, slug, term_group, description, count. Default is name.'
+          schema:
+            type: string
+            enum:
+              - id
+              - include
+              - name
+              - slug
+              - term_group
+              - description
+              - count
+            default: name
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is asc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+        - name: hide_empty
+          in: query
+          description: Whether to hide resources not assigned to any products. Default is false.
+          schema:
+            type: boolean
+            default: false
+        - name: parent
+          in: query
+          description: Limit result set to resources assigned to a specific parent.
+          schema:
+            type: integer
+        - name: product
+          in: query
+          description: Limit result set to resources assigned to a specific product.
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          description: Limit result set to resources with a specific slug.
+          schema:
+            type: string
+        - name: include
+          in: query
+          description: Limit result set to specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        '200':
+          description: Returns list of shipping classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductShippingClass'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Product shipping classes
+      summary: Create a shipping class
+      operationId: createShippingClass
+      requestBody:
+        description: Shipping class object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductShippingClass'
+        required: true
+      responses:
+        '201':
+          description: Returns created shipping class
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductShippingClass'
+  /products/shipping-classes/{classId}:
+    get:
+      tags:
+        - Product shipping classes
+      summary: Retrieve a shipping class
+      operationId: retrieveShippingClass
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified shipping class
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductShippingClass'
+    put:
+      tags:
+        - Product shipping classes
+      summary: Update a shipping class
+      operationId: updateShippingClass
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Shipping class object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductShippingClass'
+        required: true
+      responses:
+        '200':
+          description: Returns updated shipping class
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductShippingClass'
+    delete:
+      tags:
+        - Product shipping classes
+      summary: Delete a shipping class
+      operationId: deleteShippingClass
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          required: true
+          description: Required to be true, as resource does not support trashing.
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Shipping class deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductShippingClass'
+  /products/shipping-classes/batch:
+    post:
+      tags:
+        - Product shipping classes
+      summary: Batch update shipping classes
+      operationId: batchUpdateShippingClasses
+      requestBody:
+        description: Batch create, update, delete shipping classes
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductShippingClass'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductShippingClass'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Returns batch operation result
+          content:
+            application/json:
+              schema:
+                type: object
+  /products/tags:
+    post:
+      tags:
+        - Product tags
+      summary: This API helps you to create a new product tag.
+      operationId: createProductTag
+      requestBody:
+        description: Product tag object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductTag'
+        required: true
+      responses:
+        '201':
+          description: Returns created product tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTag'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    get:
+      tags:
+        - Product tags
+      summary: This API lets you retrieve all product tags.
+      operationId: listAllProductTags
+      parameters:
+        - name: context
+          in: query
+          description: Scope under which the request is made; determines fields present in response
+          schema:
+            type: string
+            enum: [view, edit]
+            default: view
+        - name: page
+          in: query
+          description: Current page of the collection
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string
+          schema:
+            type: string
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific ids
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: orderby
+          in: query
+          description: Sort collection by resource attribute
+          schema:
+            type: string
+            enum: [id, include, name, slug, term_group, description, count]
+            default: name
+        - name: hide_empty
+          in: query
+          description: Whether to hide resources not assigned to any products
+          schema:
+            type: boolean
+            default: false
+        - name: product
+          in: query
+          description: Limit result set to resources assigned to a specific product
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          description: Limit result set to resources with a specific slug
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns list of product tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductTag'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+  /products/tags/{tagId}:
+    get:
+      tags:
+        - Product tags
+      summary: This API lets you retrieve a product tag by ID.
+      operationId: retrieveProductTag
+      parameters:
+        - name: tagId
+          in: path
+          description: ID of product tag to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified product tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTag'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - Product tags
+      summary: This API lets you make changes to a product tag.
+      operationId: updateProductTag
+      parameters:
+        - name: tagId
+          in: path
+          description: ID of product tag to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Product tag object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductTag'
+        required: true
+      responses:
+        '200':
+          description: Returns updated product tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTag'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - Product tags
+      summary: This API helps you delete a product tag.
+      operationId: deleteProductTag
+      parameters:
+        - name: tagId
+          in: path
+          description: ID of product tag to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Product tag deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTag'
+  /products/tags/batch:
+    post:
+      tags:
+        - Product tags
+      summary: Batch create, update, and delete product tags
+      operationId: batchProductTags
+      requestBody:
+        description: Batch create, update, and delete product tags
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductTag'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductTag'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductTag'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductTag'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductTag'
   /orders:
     post:
       tags:
@@ -1667,6 +2749,464 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /orders/batch:
+    post:
+      tags:
+        - Orders
+      summary: Batch create, update, and delete orders
+      operationId: batchOrders
+      requestBody:
+        description: Batch create, update, and delete orders
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Order'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Order'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+  /products/reviews:
+    get:
+      tags:
+        - Product reviews
+      summary: List all product reviews
+      operationId: listAllProductReviews
+      parameters:
+        - name: context
+          in: query
+          description: >-
+            Scope under which the request is made; determines fields present in response.
+            Options: view and edit. Default is view.
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: Current page of the collection. Default is 1.
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Maximum number of items to be returned in result set. Default is 10.
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: after
+          in: query
+          description: Limit response to reviews published after a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: before
+          in: query
+          description: Limit response to reviews published before a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: 'Order sort attribute ascending or descending. Options: asc and desc. Default is desc.'
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: 'Sort collection by resource attribute. Options: date, date_gmt, id, slug, include and product. Default is date_gmt.'
+          schema:
+            type: string
+            enum:
+              - date
+              - date_gmt
+              - id
+              - slug
+              - include
+              - product
+            default: date_gmt
+        - name: reviewer
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: reviewer_exclude
+          in: query
+          description: 'Limit result set to specific IDs.'
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: reviewer_email
+          in: query
+          description: Limit result set to that from a specific author email.
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        
+        - name: product
+          in: query
+          description: Limit result set to reviews assigned to specific product IDs
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: status
+          in: query
+          description: 'Limit result set to reviews assigned a specific status. Options: all, hold, approved, spam and trash. Default is approved.'
+          schema:
+            type: string
+            enum:
+              - all
+              - hold
+              - approved
+              - spam
+              - trash
+            default: approved
+      responses:
+        '200':
+          description: Returns list of product reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductReview'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Product reviews
+      summary: Create a product review
+      operationId: createProductReview
+      requestBody:
+        description: Product review object with data to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductReview'
+        required: true
+      responses:
+        '201':
+          description: Returns created product review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReview'
+  /products/reviews/{reviewId}:
+    get:
+      tags:
+        - Product reviews
+      summary: Retrieve a product review
+      operationId: retrieveProductReview
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified product review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReview'
+    put:
+      tags:
+        - Product reviews
+      summary: Update a product review
+      operationId: updateProductReview
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Product review object with data to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductReview'
+        required: true
+      responses:
+        '200':
+          description: Returns updated product review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReview'
+    delete:
+      tags:
+        - Product reviews
+      summary: Delete a product review
+      operationId: deleteProductReview
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          required: true
+          description: Required to be true, as resource does not support trashing.
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Product review deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReview'
+  /products/reviews/batch:
+    post:
+      tags:
+        - Product reviews
+      summary: Batch update product reviews
+      operationId: batchUpdateProductReviews
+      requestBody:
+        description: Batch create, update, delete product reviews
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductReview'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductReview'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Returns batch operation result
+          content:
+            application/json:
+              schema:
+                type: object
+  /reports:
+    get:
+      tags:
+        - Reports
+      summary: List all reports
+      operationId: listAllReports
+      responses:
+        '200':
+          description: Returns list of available reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportListItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /reports/top_sellers:
+    get:
+      tags:
+        - Reports
+      summary: Retrieve top sellers report
+      operationId: getTopSellersReport
+      parameters:
+        - name: context
+          in: query
+          description: Scope under which the request is made; determines fields present in response. Default is view.
+          schema:
+            type: string
+            default: view
+        - name: period
+          in: query
+          description: 'Report period. Default is week. Options: week, month, last_month, year'
+          schema:
+            type: string
+            enum: [week, month, last_month, year]
+        - name: date_min
+          in: query
+          description: Return sales for a specific start date (YYYY-MM-DD)
+          schema:
+            type: string
+        - name: date_max
+          in: query
+          description: Return sales for a specific end date (YYYY-MM-DD)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns top sellers report
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportTopSellersItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /reports/coupons/totals:
+    get:
+      tags:
+        - Reports
+      summary: Retrieve coupons totals report
+      operationId: getCouponsTotals
+      responses:
+        '200':
+          description: Returns coupons totals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportTotalsItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /reports/customers/totals:
+    get:
+      tags:
+        - Reports
+      summary: Retrieve customers totals report
+      operationId: getCustomersTotals
+      responses:
+        '200':
+          description: Returns customers totals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportTotalsItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /reports/orders/totals:
     get:
       tags:
@@ -1684,6 +3224,60 @@ paths:
                   $ref: '#/components/schemas/ReportOrderTotalSummary'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /reports/products/totals:
+    get:
+      tags:
+        - Reports
+      summary: Retrieve products totals report
+      operationId: getProductsTotals
+      responses:
+        '200':
+          description: Returns products totals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportTotalsItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /reports/reviews/totals:
+    get:
+      tags:
+        - Reports
+      summary: Retrieve reviews totals report
+      operationId: getReviewsTotals
+      responses:
+        '200':
+          description: Returns reviews totals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportTotalsItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -2234,6 +3828,14 @@ components:
         slug:
           type: string
           description: Tag slug. read-only
+        description:
+          type: string
+          description: HTML description of the resource
+        count:
+          type: integer
+          description: Number of published products for the resource
+      required:
+        - name
     ProductAttribute:
       type: object
       properties:
@@ -2246,6 +3848,39 @@ components:
         option:
           type: string
           description: Selected attribute term name. Applicable only for Product represents SKU (variation)
+        slug:
+          type: string
+          description: Attribute slug.
+        type:
+          type: string
+          description: Attribute type.
+        order_by:
+          type: string
+          description: Sort order.
+        has_archives:
+          type: boolean
+          description: Enable/Disable attribute archives.
+    ProductAttributeTerm:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Term ID.
+        name:
+          type: string
+          description: Term name.
+        slug:
+          type: string
+          description: Term slug.
+        description:
+          type: string
+          description: Term description.
+        menu_order:
+          type: integer
+          description: Menu order.
+        count:
+          type: integer
+          description: Number of products in term.
     ProductCategory:
       type: object
       properties:
@@ -2281,6 +3916,73 @@ components:
           readOnly: true
       required:
         - name
+    ProductShippingClass:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Shipping class ID.
+        name:
+          type: string
+          description: Shipping class name.
+        slug:
+          type: string
+          description: Shipping class slug.
+        description:
+          type: string
+          description: Shipping class description.
+        count:
+          type: integer
+          description: Number of products in class.
+    ProductReview:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource.
+          readOnly: true
+        date_created:
+          type: string
+          format: date-time
+          description: The date the review was created, in the site's timezone.
+          readOnly: true
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the review was created, as GMT.
+          readOnly: true
+        product_id:
+          type: integer
+          description: Unique identifier for the product that the review belongs to.
+        status:
+          type: string
+          description: Status of the review.
+          enum:
+            - approved
+            - hold
+            - spam
+            - unspam
+            - trash
+            - untrash
+          default: approved
+        reviewer:
+          type: string
+          description: Reviewer name.
+        reviewer_email:
+          type: string
+          format: email
+          description: Reviewer email.
+        review:
+          type: string
+          description: The content of the review.
+        rating:
+          type: integer
+          description: Review rating (0 to 5).
+          minimum: 0
+          maximum: 5
+        verified:
+          type: boolean
+          description: Shows if the reviewer bought the product or not.
     Order:
       type: object
       properties:
@@ -2854,6 +4556,48 @@ components:
           type: object
           properties: {}
           description: Meta value for UI display.
+    ReportListItem:
+      type: object
+      properties:
+        slug:
+          type: string
+        description:
+          type: string
+        _links:
+          type: object
+          properties:
+            self:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+            collection:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+    ReportTotalsItem:
+      type: object
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        total:
+          type: string
+    ReportTopSellersItem:
+      type: object
+      properties:
+        title:
+          type: string
+        product_id:
+          type: integer
+        quantity:
+          type: integer
     ReportOrderTotalSummary:
       type: object
       properties:
