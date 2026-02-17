@@ -1,4 +1,4 @@
-# specVersion: 0.9.7
+# specVersion: 1.0.0
 openapi: 3.0.1
 info:
   title: WooCommerce REST API
@@ -23,6 +23,13 @@ tags:
   - name: Product tags
   - name: Product reviews
   - name: Reports
+  - name: Coupons
+  - name: Settings
+  - name: Shipping zones
+  - name: Payment gateways
+  - name: Taxes
+  - name: Webhooks
+  - name: System status
 paths:
   /customers:
     post:
@@ -2794,6 +2801,181 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Order'
+  /orders/{orderId}/notes:
+    get:
+      tags:
+        - Orders
+      summary: This API helps you to view all notes for an order.
+      operationId: listAllOrderNotes
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for notes to return
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Returns list of order notes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderNote'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Orders
+      summary: This API helps you to create a new order note.
+      operationId: createOrderNote
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for note to create
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Order note object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderNote'
+        required: true
+      responses:
+        '201':
+          description: Returns created order note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNote'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /orders/{orderId}/notes/{noteId}:
+    get:
+      tags:
+        - Orders
+      summary: This API lets you retrieve and view a specific order note by ID.
+      operationId: retrieveOrderNoteById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for note to return
+          required: true
+          schema:
+            type: integer
+        - name: noteId
+          in: path
+          description: ID of note to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified order note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNote'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Orders
+      summary: This API helps you delete an order note.
+      operationId: deleteOrderNoteById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for note to delete
+          required: true
+          schema:
+            type: integer
+        - name: noteId
+          in: path
+          description: ID of note to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted order note.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNote'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /products/reviews:
     get:
       tags:
@@ -3326,6 +3508,2045 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /orders/{orderId}/refunds:
+    get:
+      tags:
+        - Orders
+      summary: This API helps you to view all refunds for an order.
+      operationId: listAllOrderRefunds
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for refunds to return
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Returns list of order refunds.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderRefund'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Orders
+      summary: This API helps you to create a new order refund.
+      operationId: createOrderRefund
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for refund to create
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Order refund object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRefund'
+        required: true
+      responses:
+        '201':
+          description: Returns created order refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderRefund'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /orders/{orderId}/refunds/{refundId}:
+    get:
+      tags:
+        - Orders
+      summary: This API lets you retrieve and view a specific order refund by ID.
+      operationId: retrieveOrderRefundById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for refund to return
+          required: true
+          schema:
+            type: integer
+        - name: refundId
+          in: path
+          description: ID of refund to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified order refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderRefund'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Orders
+      summary: This API helps you delete an order refund.
+      operationId: deleteOrderRefundById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order for refund to delete
+          required: true
+          schema:
+            type: integer
+        - name: refundId
+          in: path
+          description: ID of refund to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted order refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderRefund'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /coupons:
+    get:
+      tags:
+        - Coupons
+      summary: This API helps you to view all coupons.
+      operationId: listAllCoupons
+      parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: after
+          in: query
+          description: Limit response to resources published after a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: before
+          in: query
+          description: Limit response to resources published before a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: Sort collection by object attribute.
+          schema:
+            type: string
+            enum:
+              - date
+              - id
+              - include
+              - title
+              - slug
+            default: date
+        - name: code
+          in: query
+          description: Limit result set to resources with a specific code.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns list of coupons.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Coupons
+      summary: This API helps you to create a new coupon.
+      operationId: createCoupon
+      requestBody:
+        description: Coupon object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+        required: true
+      responses:
+        '201':
+          description: Returns created coupon.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /coupons/{couponId}:
+    get:
+      tags:
+        - Coupons
+      summary: This API lets you retrieve and view a specific coupon by ID.
+      operationId: retrieveCouponById
+      parameters:
+        - name: couponId
+          in: path
+          description: ID of coupon to return
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+      responses:
+        '200':
+          description: Returns specified coupon.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Coupons
+      summary: This API helps you to update a coupon.
+      operationId: updateCoupon
+      parameters:
+        - name: couponId
+          in: path
+          description: ID of coupon to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Coupon object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+        required: true
+      responses:
+        '200':
+          description: Returns updated coupon.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Coupons
+      summary: This API helps you delete a coupon.
+      operationId: deleteCouponById
+      parameters:
+        - name: couponId
+          in: path
+          description: ID of coupon to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted coupon.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /coupons/batch:
+    post:
+      tags:
+        - Coupons
+      summary: Batch create, update, and delete coupons
+      operationId: batchCoupons
+      requestBody:
+        description: Batch create, update, and delete coupons
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Coupon'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Coupon'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Coupon'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Coupon'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Coupon'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /settings:
+    get:
+      tags:
+        - Settings
+      summary: This API helps you to view all settings groups.
+      operationId: listAllSettingsGroups
+      responses:
+        '200':
+          description: Returns list of settings groups.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SettingsGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /settings/{groupId}:
+    get:
+      tags:
+        - Settings
+      summary: This API helps you to view a specific settings group.
+      operationId: retrieveSettingsGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of settings group to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns specified settings group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /settings/{groupId}/{id}:
+    get:
+      tags:
+        - Settings
+      summary: This API helps you to view a specific setting.
+      operationId: retrieveSetting
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of settings group
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID of setting to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns specified setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Settings
+      summary: This API helps you to update a specific setting.
+      operationId: updateSetting
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of settings group
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID of setting to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Setting object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Setting'
+        required: true
+      responses:
+        '200':
+          description: Returns updated setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /shipping/zones:
+    get:
+      tags:
+        - Shipping zones
+      summary: This API helps you to view all shipping zones.
+      operationId: listAllShippingZones
+      responses:
+        '200':
+          description: Returns list of shipping zones.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShippingZone'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Shipping zones
+      summary: This API helps you to create a new shipping zone.
+      operationId: createShippingZone
+      requestBody:
+        description: Shipping zone object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingZone'
+        required: true
+      responses:
+        '201':
+          description: Returns created shipping zone.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZone'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /shipping/zones/{id}:
+    get:
+      tags:
+        - Shipping zones
+      summary: This API lets you retrieve and view a specific shipping zone by ID.
+      operationId: retrieveShippingZoneById
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified shipping zone.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZone'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Shipping zones
+      summary: This API helps you to update a shipping zone.
+      operationId: updateShippingZone
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Shipping zone object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingZone'
+        required: true
+      responses:
+        '200':
+          description: Returns updated shipping zone.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZone'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Shipping zones
+      summary: This API helps you delete a shipping zone.
+      operationId: deleteShippingZoneById
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted shipping zone.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZone'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /shipping/zones/{id}/locations:
+    get:
+      tags:
+        - Shipping zones
+      summary: This API helps you to view all locations for a shipping zone.
+      operationId: listShippingZoneLocations
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns list of shipping zone locations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShippingZoneLocation'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Shipping zones
+      summary: This API helps you to update locations for a shipping zone.
+      operationId: updateShippingZoneLocations
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Shipping zone locations array with data to update.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShippingZoneLocation'
+        required: true
+      responses:
+        '200':
+          description: Returns updated shipping zone locations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShippingZoneLocation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /shipping/zones/{id}/methods:
+    get:
+      tags:
+        - Shipping zones
+      summary: This API helps you to view all shipping methods for a shipping zone.
+      operationId: listShippingZoneMethods
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns list of shipping zone methods.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShippingZoneMethod'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Shipping zones
+      summary: This API helps you to create a new shipping method for a shipping zone.
+      operationId: createShippingZoneMethod
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Shipping zone method object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingZoneMethod'
+        required: true
+      responses:
+        '201':
+          description: Returns created shipping zone method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZoneMethod'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /shipping/zones/{id}/methods/{instanceId}:
+    get:
+      tags:
+        - Shipping zones
+      summary: This API lets you retrieve and view a specific shipping zone method by instance ID.
+      operationId: retrieveShippingZoneMethodById
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+        - name: instanceId
+          in: path
+          description: Instance ID of shipping zone method to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns specified shipping zone method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZoneMethod'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Shipping zones
+      summary: This API helps you to update a shipping zone method.
+      operationId: updateShippingZoneMethod
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+        - name: instanceId
+          in: path
+          description: Instance ID of shipping zone method to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Shipping zone method object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingZoneMethod'
+        required: true
+      responses:
+        '200':
+          description: Returns updated shipping zone method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZoneMethod'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Shipping zones
+      summary: This API helps you delete a shipping zone method.
+      operationId: deleteShippingZoneMethodById
+      parameters:
+        - name: id
+          in: path
+          description: ID of shipping zone
+          required: true
+          schema:
+            type: integer
+        - name: instanceId
+          in: path
+          description: Instance ID of shipping zone method to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted shipping zone method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingZoneMethod'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /payment_gateways:
+    get:
+      tags:
+        - Payment gateways
+      summary: This API helps you to view all payment gateways.
+      operationId: listAllPaymentGateways
+      responses:
+        '200':
+          description: Returns list of payment gateways.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentGateway'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /payment_gateways/{id}:
+    get:
+      tags:
+        - Payment gateways
+      summary: This API lets you retrieve and view a specific payment gateway by ID.
+      operationId: retrievePaymentGatewayById
+      parameters:
+        - name: id
+          in: path
+          description: ID of payment gateway to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns specified payment gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentGateway'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Payment gateways
+      summary: This API helps you to update a payment gateway.
+      operationId: updatePaymentGateway
+      parameters:
+        - name: id
+          in: path
+          description: ID of payment gateway to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Payment gateway object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentGateway'
+        required: true
+      responses:
+        '200':
+          description: Returns updated payment gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentGateway'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /taxes:
+    get:
+      tags:
+        - Taxes
+      summary: This API helps you to view all taxes.
+      operationId: listAllTaxes
+      parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+        - name: orderby
+          in: query
+          description: Sort collection by object attribute.
+          schema:
+            type: string
+            enum:
+              - id
+              - order
+            default: id
+        - name: class
+          in: query
+          description: Limit result set to resources with a specific tax class.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns list of taxes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tax'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Taxes
+      summary: This API helps you to create a new tax.
+      operationId: createTax
+      requestBody:
+        description: Tax object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tax'
+        required: true
+      responses:
+        '201':
+          description: Returns created tax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tax'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /taxes/{id}:
+    get:
+      tags:
+        - Taxes
+      summary: This API lets you retrieve and view a specific tax by ID.
+      operationId: retrieveTaxById
+      parameters:
+        - name: id
+          in: path
+          description: ID of tax to return
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+      responses:
+        '200':
+          description: Returns specified tax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tax'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Taxes
+      summary: This API helps you to update a tax.
+      operationId: updateTax
+      parameters:
+        - name: id
+          in: path
+          description: ID of tax to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Tax object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tax'
+        required: true
+      responses:
+        '200':
+          description: Returns updated tax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tax'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Taxes
+      summary: This API helps you delete a tax.
+      operationId: deleteTaxById
+      parameters:
+        - name: id
+          in: path
+          description: ID of tax to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted tax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tax'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /taxes/batch:
+    post:
+      tags:
+        - Taxes
+      summary: Batch create, update, and delete taxes
+      operationId: batchTaxes
+      requestBody:
+        description: Batch create, update, and delete taxes
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Tax'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Tax'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tax'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tax'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tax'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /taxes/classes:
+    get:
+      tags:
+        - Taxes
+      summary: This API helps you to view all tax classes.
+      operationId: listAllTaxClasses
+      responses:
+        '200':
+          description: Returns list of tax classes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxClass'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Taxes
+      summary: This API helps you to create a new tax class.
+      operationId: createTaxClass
+      requestBody:
+        description: Tax class object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxClass'
+        required: true
+      responses:
+        '201':
+          description: Returns created tax class.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxClass'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /taxes/classes/{slug}:
+    get:
+      tags:
+        - Taxes
+      summary: This API lets you retrieve and view a specific tax class by slug.
+      operationId: retrieveTaxClassBySlug
+      parameters:
+        - name: slug
+          in: path
+          description: Slug of tax class to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns specified tax class.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxClass'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Taxes
+      summary: This API helps you delete a tax class.
+      operationId: deleteTaxClassBySlug
+      parameters:
+        - name: slug
+          in: path
+          description: Slug of tax class to delete
+          required: true
+          schema:
+            type: string
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted tax class.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxClass'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: This API helps you to view all webhooks.
+      operationId: listAllWebhooks
+      parameters:
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+        - name: page
+          in: query
+          description: 'Current page of the collection. Default is 1.'
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set. Default is 10.'
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          description: Limit results to those matching a string.
+          schema:
+            type: string
+        - name: after
+          in: query
+          description: Limit response to resources published after a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: before
+          in: query
+          description: Limit response to resources published before a given ISO8601 compliant date.
+          schema:
+            type: string
+            format: date-time
+        - name: exclude
+          in: query
+          description: Ensure result set excludes specific IDs.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: include
+          in: query
+          description: Limit result set to specific ids.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: offset
+          in: query
+          description: Offset the result set by a specific number of items.
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: Order sort attribute ascending or descending.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: orderby
+          in: query
+          description: Sort collection by object attribute.
+          schema:
+            type: string
+            enum:
+              - date
+              - id
+              - include
+              - title
+            default: date
+        - name: status
+          in: query
+          description: Limit result set to webhooks assigned a specific status.
+          schema:
+            type: string
+            enum:
+              - all
+              - active
+              - paused
+              - disabled
+      responses:
+        '200':
+          description: Returns list of webhooks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      tags:
+        - Webhooks
+      summary: This API helps you to create a new webhook.
+      operationId: createWebhook
+      requestBody:
+        description: Webhook object with data to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+        required: true
+      responses:
+        '201':
+          description: Returns created webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /webhooks/{id}:
+    get:
+      tags:
+        - Webhooks
+      summary: This API lets you retrieve and view a specific webhook by ID.
+      operationId: retrieveWebhookById
+      parameters:
+        - name: id
+          in: path
+          description: ID of webhook to return
+          required: true
+          schema:
+            type: integer
+        - name: context
+          in: query
+          description: 'Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.'
+          schema:
+            type: string
+            enum:
+              - view
+              - edit
+            default: view
+      responses:
+        '200':
+          description: Returns specified webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - Webhooks
+      summary: This API helps you to update a webhook.
+      operationId: updateWebhook
+      parameters:
+        - name: id
+          in: path
+          description: ID of webhook to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Webhook object with data to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+        required: true
+      responses:
+        '200':
+          description: Returns updated webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - Webhooks
+      summary: This API helps you delete a webhook.
+      operationId: deleteWebhookById
+      parameters:
+        - name: id
+          in: path
+          description: ID of webhook to delete
+          required: true
+          schema:
+            type: integer
+        - name: force
+          in: query
+          description: Required to be true, as resource does not support trashing.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Returns deleted webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /webhooks/batch:
+    post:
+      tags:
+        - Webhooks
+      summary: Batch create, update, and delete webhooks
+      operationId: batchWebhooks
+      requestBody:
+        description: Batch create, update, and delete webhooks
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Webhook'
+                update:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Webhook'
+                delete:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Batch operation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  create:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+                  update:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+                  delete:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /system_status:
+    get:
+      tags:
+        - System status
+      summary: This API helps you to view the system status.
+      operationId: getSystemStatus
+      responses:
+        '200':
+          description: Returns system status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /system_status/tools:
+    get:
+      tags:
+        - System status
+      summary: This API helps you to view all system status tools.
+      operationId: listAllSystemStatusTools
+      responses:
+        '200':
+          description: Returns list of system status tools.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemStatusTool'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /system_status/tools/{id}:
+    get:
+      tags:
+        - System status
+      summary: This API lets you retrieve and view a specific system status tool by ID.
+      operationId: retrieveSystemStatusToolById
+      parameters:
+        - name: id
+          in: path
+          description: ID of system status tool to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns specified system status tool.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatusTool'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    put:
+      tags:
+        - System status
+      summary: This API helps you to run a system status tool.
+      operationId: runSystemStatusTool
+      parameters:
+        - name: id
+          in: path
+          description: ID of system status tool to run
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns system status tool execution result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatusTool'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -4526,16 +6747,128 @@ components:
           items:
             $ref: '#/components/schemas/MetaData'
     OrderRefund:
+      type: object
       properties:
         id:
           type: integer
-          description: Refund ID.
+          description: Refund ID. read-only
         reason:
           type: string
           description: Refund reason.
         total:
           type: string
           description: Refund total.
+        date_created:
+          type: string
+          format: date-time
+          description: The date the refund was created, in the site's timezone. read-only
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the refund was created, as GMT. read-only
+        amount:
+          type: string
+          description: Refund amount.
+        api_refund:
+          type: boolean
+          description: When true, the payment gateway API is used to generate the refund.
+        line_items:
+          type: array
+          description: List of line items data.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Item ID.
+              name:
+                type: string
+                description: Product name.
+              product_id:
+                type: integer
+                description: Product ID.
+              variation_id:
+                type: integer
+                description: Variation ID, if applicable.
+              quantity:
+                type: integer
+                description: Quantity ordered.
+              tax_class:
+                type: string
+                description: Tax class of product.
+              subtotal:
+                type: string
+                description: Line subtotal (before discounts).
+              subtotal_tax:
+                type: string
+                description: Line subtotal tax (before discounts).
+              total:
+                type: string
+                description: Line total (after discounts).
+              total_tax:
+                type: string
+                description: Line total tax (after discounts).
+              taxes:
+                type: array
+                description: Line taxes.
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Tax rate ID.
+                    total:
+                      type: string
+                      description: Tax total.
+                    subtotal:
+                      type: string
+                      description: Tax subtotal.
+              meta_data:
+                type: array
+                description: Meta data.
+                items:
+                  $ref: '#/components/schemas/MetaData'
+              sku:
+                type: string
+                description: Product SKU.
+              price:
+                type: number
+                format: float
+                description: Product price.
+        refunded_by:
+          type: integer
+          description: User ID of user who created the refund. read-only
+        refunded_payment:
+          type: boolean
+          description: If the refund was created via the API. read-only
+        meta_data:
+          type: array
+          description: Meta data.
+          items:
+            $ref: '#/components/schemas/MetaData'
+    OrderNote:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        author:
+          type: string
+          description: Note author. Displays as "system" for WooCommerce-generated notes, otherwise the author name. read-only
+        date_created:
+          type: string
+          format: date-time
+          description: The date the note was created, in the site's timezone. read-only
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the note was created, as GMT. read-only
+        note:
+          type: string
+          description: Note content. mandatory
+        customer_note:
+          type: boolean
+          description: If true, the note will be visible to customers. mandatory
     MetaData:
       type: object
       properties:
@@ -4656,6 +6989,431 @@ components:
           type: string
         customers:
           type: integer
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        code:
+          type: string
+          description: Coupon code. mandatory
+        amount:
+          type: string
+          description: The amount of discount. Should always be numeric, even if setting a percentage.
+        date_created:
+          type: string
+          format: date-time
+          description: The date the coupon was created, in the site's timezone. read-only
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the coupon was created, as GMT. read-only
+        date_modified:
+          type: string
+          format: date-time
+          description: The date the coupon was last modified, in the site's timezone. read-only
+        date_modified_gmt:
+          type: string
+          format: date-time
+          description: The date the coupon was last modified, as GMT. read-only
+        discount_type:
+          type: string
+          description: Determines the type of discount that will be applied.
+          enum:
+            - percent
+            - fixed_cart
+            - fixed_product
+          default: fixed_cart
+        description:
+          type: string
+          description: Coupon description.
+        date_expires:
+          type: string
+          format: date-time
+          description: The date the coupon expires, in the site's timezone.
+        date_expires_gmt:
+          type: string
+          format: date-time
+          description: The date the coupon expires, as GMT.
+        usage_count:
+          type: integer
+          description: Number of times the coupon has been used already. read-only
+        individual_use:
+          type: boolean
+          description: If true, the coupon can only be used individually. Other applied coupons will be removed from the cart.
+          default: false
+        product_ids:
+          type: array
+          description: List of product IDs the coupon can be used on.
+          items:
+            type: integer
+        excluded_product_ids:
+          type: array
+          description: List of product IDs the coupon cannot be used on.
+          items:
+            type: integer
+        usage_limit:
+          type: integer
+          description: How many times the coupon can be used in total.
+        usage_limit_per_user:
+          type: integer
+          description: How many times the coupon can be used per customer.
+        limit_usage_to_x_items:
+          type: integer
+          description: Max number of items in the cart the coupon can be applied to.
+        free_shipping:
+          type: boolean
+          description: If true and if the free shipping method requires a coupon, this coupon will enable free shipping.
+          default: false
+        product_categories:
+          type: array
+          description: List of category IDs the coupon applies to.
+          items:
+            type: integer
+        excluded_product_categories:
+          type: array
+          description: List of category IDs the coupon does not apply to.
+          items:
+            type: integer
+        exclude_sale_items:
+          type: boolean
+          description: If true, this coupon will not be applied to items that have sale prices.
+          default: false
+        minimum_amount:
+          type: string
+          description: Minimum order amount that needs to be in the cart before coupon applies.
+        maximum_amount:
+          type: string
+          description: Maximum order amount allowed when using the coupon.
+        email_restrictions:
+          type: array
+          description: List of email addresses that can use this coupon.
+          items:
+            type: string
+        meta_data:
+          type: array
+          description: Meta data.
+          items:
+            $ref: '#/components/schemas/MetaData'
+    SettingsGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Settings group ID.
+        label:
+          type: string
+          description: Settings group label.
+        description:
+          type: string
+          description: Settings group description.
+        parent_id:
+          type: string
+          description: Parent ID.
+        sub_groups:
+          type: string
+          description: Sub groups.
+    Setting:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the setting.
+        label:
+          type: string
+          description: A human readable label for the setting used in interfaces.
+        description:
+          type: string
+          description: A human readable description for the setting used in interfaces.
+        value:
+          type: string
+          description: Setting value.
+        default:
+          type: string
+          description: Default value for the setting.
+        tip:
+          type: string
+          description: Additional help text shown to the user about the setting.
+        type:
+          type: string
+          description: Type of setting.
+        options:
+          type: object
+          description: An object of option properties.
+    ShippingZone:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        name:
+          type: string
+          description: Shipping zone name. mandatory
+        order:
+          type: integer
+          description: Shipping zone order.
+        _links:
+          type: object
+          description: List of links.
+          properties:
+            self:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+            collection:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+    ShippingZoneLocation:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Location code.
+        type:
+          type: string
+          description: Location type.
+          enum:
+            - postcode
+            - state
+            - country
+            - continent
+    ShippingZoneMethod:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Method ID. read-only
+        instance_id:
+          type: integer
+          description: Instance ID. read-only
+        title:
+          type: string
+          description: Shipping method title.
+        order:
+          type: integer
+          description: Shipping method sort order.
+        enabled:
+          type: boolean
+          description: Shipping method enabled status.
+        method_id:
+          type: string
+          description: Shipping method ID.
+        method_title:
+          type: string
+          description: Shipping method title. read-only
+        method_description:
+          type: string
+          description: Shipping method description. read-only
+        settings:
+          type: object
+          description: Shipping method settings.
+    PaymentGateway:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Payment gateway ID. read-only
+        title:
+          type: string
+          description: Payment gateway title on checkout.
+        description:
+          type: string
+          description: Payment gateway description on checkout.
+        order:
+          type: integer
+          description: Payment gateway sort order.
+        enabled:
+          type: boolean
+          description: Payment gateway enabled status.
+        method_title:
+          type: string
+          description: Payment gateway method title. read-only
+        method_description:
+          type: string
+          description: Payment gateway method description. read-only
+        method_supports:
+          type: array
+          description: Supported features for this payment gateway. read-only
+          items:
+            type: string
+        settings:
+          type: object
+          description: Payment gateway settings.
+    Tax:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        country:
+          type: string
+          description: Country ISO 3166 code. mandatory
+        state:
+          type: string
+          description: State code.
+        postcode:
+          type: string
+          description: Postcode/ZIP code.
+        city:
+          type: string
+          description: City name.
+        rate:
+          type: string
+          description: Tax rate. mandatory
+        name:
+          type: string
+          description: Tax rate name. mandatory
+        priority:
+          type: integer
+          description: Tax priority.
+          default: 1
+        compound:
+          type: boolean
+          description: Whether or not this is a compound rate.
+          default: false
+        shipping:
+          type: boolean
+          description: Whether or not this tax rate also gets applied to shipping.
+          default: true
+        order:
+          type: integer
+          description: Indicates the order that will appear in queries.
+          default: 0
+        class:
+          type: string
+          description: Tax class.
+          default: standard
+    TaxClass:
+      type: object
+      properties:
+        slug:
+          type: string
+          description: Unique identifier for the resource. read-only
+        name:
+          type: string
+          description: Tax class name. mandatory
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the resource. read-only
+        name:
+          type: string
+          description: A friendly name for the webhook. mandatory
+        status:
+          type: string
+          description: Webhook status.
+          enum:
+            - active
+            - paused
+            - disabled
+          default: active
+        topic:
+          type: string
+          description: Webhook topic. mandatory
+        resource:
+          type: string
+          description: Webhook resource. read-only
+        event:
+          type: string
+          description: Webhook event. read-only
+        hooks:
+          type: array
+          description: WooCommerce action names associated with the webhook. read-only
+          items:
+            type: string
+        delivery_url:
+          type: string
+          format: uri
+          description: The URL where the webhook payload is delivered. mandatory
+        secret:
+          type: string
+          description: Secret key used to generate a hash of the delivered webhook and provided in the request headers. This will default is a MD5 hash from the current user's ID|username if not provided.
+        date_created:
+          type: string
+          format: date-time
+          description: The date the webhook was created, in the site's timezone. read-only
+        date_created_gmt:
+          type: string
+          format: date-time
+          description: The date the webhook was created, as GMT. read-only
+        date_modified:
+          type: string
+          format: date-time
+          description: The date the webhook was last modified, in the site's timezone. read-only
+        date_modified_gmt:
+          type: string
+          format: date-time
+          description: The date the webhook was last modified, as GMT. read-only
+    SystemStatus:
+      type: object
+      description: System status information.
+      properties:
+        environment:
+          type: object
+          description: Environment information.
+        database:
+          type: object
+          description: Database information.
+        active_plugins:
+          type: array
+          description: Active plugins.
+          items:
+            type: object
+        inactive_plugins:
+          type: array
+          description: Inactive plugins.
+          items:
+            type: object
+        dropins_mu_plugins:
+          type: array
+          description: Dropins and MU plugins.
+          items:
+            type: object
+        theme:
+          type: object
+          description: Theme information.
+        settings:
+          type: object
+          description: Settings information.
+        security:
+          type: object
+          description: Security information.
+        pages:
+          type: array
+          description: Pages.
+          items:
+            type: object
+    SystemStatusTool:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the tool. read-only
+        name:
+          type: string
+          description: Tool name. read-only
+        action:
+          type: string
+          description: What running the tool will do. read-only
+        description:
+          type: string
+          description: Tool description. read-only
+        success:
+          type: boolean
+          description: Did the tool run successfully? read-only
+        message:
+          type: string
+          description: Tool return message. read-only
     ApiError:
       type: object
       properties:
